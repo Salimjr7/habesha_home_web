@@ -1,0 +1,684 @@
+// Habesha Home — Prisma Schema
+// Full-stack Ethiopian Home Rental Marketplace
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// AUTHENTICATION & USER MANAGEMENT (Better Auth compatible)
+// ============================================================================
+
+enum UserRole {
+  GUEST
+  RENTER
+  OWNER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  phone         String?
+  role          UserRole  @default(RENTER)
+  banned        Boolean   @default(false)
+  banReason     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Better Auth relations
+  sessions Session[]
+  accounts Account[]
+
+  // App relations
+  profile       Profile?
+  properties    Property[]
+  bookings      Booking[]
+  favorites     Favorite[]
+  reviewsGiven  Review[]        @relation("ReviewAuthor")
+  sentMessages  Message[]       @relation("MessageSender")
+  conversations ConversationParticipant[]
+  notifications Notification[]
+  wallet        Wallet?
+  withdrawals   Withdrawal[]
+  payoutAccounts PayoutAccount[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+// ============================================================================
+// USER PROFILE
+// ============================================================================
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  bio         String?
+  avatar      String?
+  phone       String?
+  dateOfBirth DateTime?
+  address     String?
+  city        String?
+  language    String   @default("en")
+  currency    String   @default("ETB")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================================
+// LOCATION SYSTEM
+// ============================================================================
+
+model Country {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String   @unique
+  currency  String   @default("ETB")
+  createdAt DateTime @default(now())
+
+  cities City[]
+}
+
+model City {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  countryId   String
+  description String?
+  image       String?
+  latitude    Float?
+  longitude   Float?
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  country    Country    @relation(fields: [countryId], references: [id])
+  properties Property[]
+
+  @@index([countryId])
+  @@index([slug])
+  @@index([featured])
+}
+
+// ============================================================================
+// PROPERTY SYSTEM
+// ============================================================================
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  VILLA
+  CONDO
+  STUDIO
+  PENTHOUSE
+  TOWNHOUSE
+  COTTAGE
+}
+
+enum PropertyStatus {
+  DRAFT
+  PUBLISHED
+  PAUSED
+  ARCHIVED
+}
+
+enum ListingType {
+  SHORT_TERM
+  LONG_TERM
+  BOTH
+}
+
+model Property {
+  id              String         @id @default(cuid())
+  title           String
+  slug            String         @unique
+  description     String
+  propertyType    PropertyType
+  listingType     ListingType    @default(SHORT_TERM)
+  status          PropertyStatus @default(DRAFT)
+
+  // Location
+  cityId          String
+  address         String
+  latitude        Float?
+  longitude       Float?
+
+  // Details
+  bedrooms        Int
+  bathrooms       Int
+  beds            Int
+  maxGuests       Int
+
+  // Pricing (in ETB minor units — cents)
+  pricePerNight   Int
+  pricePerMonth   Int?
+  cleaningFee     Int            @default(0)
+  serviceFee      Int            @default(0)
+
+  // Discounts (percentage)
+  weeklyDiscount  Int            @default(0)
+  monthlyDiscount Int            @default(0)
+
+  // Flags
+  instantBooking  Boolean        @default(false)
+  verified        Boolean        @default(false)
+  featured        Boolean        @default(false)
+
+  // Aggregate stats (denormalized for performance)
+  avgRating       Float          @default(0)
+  reviewCount     Int            @default(0)
+
+  // Owner
+  ownerId         String
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  owner          User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  city           City               @relation(fields: [cityId], references: [id])
+  images         PropertyImage[]
+  amenities      PropertyAmenity[]
+  availability   PropertyAvailability[]
+  bookings       Booking[]
+  reviews        Review[]
+  favorites      Favorite[]
+
+  @@index([ownerId])
+  @@index([cityId])
+  @@index([status])
+  @@index([propertyType])
+  @@index([pricePerNight])
+  @@index([avgRating])
+  @@index([featured])
+  @@index([slug])
+  @@index([status, propertyType, cityId])
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  propertyId String
+  url        String
+  alt        String?
+  order      Int      @default(0)
+  isCover    Boolean  @default(false)
+  width      Int?
+  height     Int?
+  blurHash   String?
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@index([propertyId, order])
+}
+
+model Amenity {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  slug     String  @unique
+  icon     String?
+  category String?
+
+  properties PropertyAmenity[]
+
+  @@index([category])
+}
+
+model PropertyAmenity {
+  id         String @id @default(cuid())
+  propertyId String
+  amenityId  String
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity  Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, amenityId])
+}
+
+model PropertyAvailability {
+  id         String   @id @default(cuid())
+  propertyId String
+  startDate  DateTime
+  endDate    DateTime
+  available  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@index([propertyId, startDate, endDate])
+}
+
+// ============================================================================
+// BOOKING SYSTEM
+// ============================================================================
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  REJECTED
+  EXPIRED
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  propertyId    String
+  renterId      String
+  checkIn       DateTime
+  checkOut      DateTime
+  guests        Int
+  status        BookingStatus @default(PENDING)
+
+  // Pricing snapshot (in minor units ETB)
+  basePrice     Int
+  cleaningFee   Int           @default(0)
+  serviceFee    Int           @default(0)
+  tax           Int           @default(0)
+  discount      Int           @default(0)
+  totalPrice    Int
+
+  // Currency
+  currency      String        @default("ETB")
+
+  // Notes
+  guestMessage  String?
+  hostMessage   String?
+  cancelReason  String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  property Property          @relation(fields: [propertyId], references: [id])
+  renter   User              @relation(fields: [renterId], references: [id])
+  payment  Payment?
+  review   Review?
+
+  @@index([propertyId])
+  @@index([renterId])
+  @@index([status])
+  @@index([propertyId, checkIn, checkOut])
+  @@index([propertyId, status, checkIn, checkOut])
+}
+
+// ============================================================================
+// PAYMENT SYSTEM
+// ============================================================================
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentProviderType {
+  CHAPA
+  TELEBIRR
+  STRIPE
+  PAYPAL
+}
+
+model Payment {
+  id                String              @id @default(cuid())
+  bookingId         String              @unique
+  amount            Int
+  currency          String              @default("ETB")
+  status            PaymentStatus       @default(PENDING)
+  provider          PaymentProviderType
+  providerRef       String?             // Provider transaction reference
+  providerData      Json?               // Provider-specific response data
+  txRef             String              @unique // Our unique transaction reference
+  callbackUrl       String?
+  returnUrl         String?
+  checkoutUrl       String?             // Provider checkout URL
+  idempotencyKey    String              @unique
+  failureReason     String?
+  refundedAmount    Int                 @default(0)
+  paidAt            DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  booking      Booking              @relation(fields: [bookingId], references: [id])
+  transactions PaymentTransaction[]
+
+  @@index([bookingId])
+  @@index([txRef])
+  @@index([status])
+  @@index([idempotencyKey])
+}
+
+model PaymentTransaction {
+  id        String        @id @default(cuid())
+  paymentId String
+  type      String        // "charge", "refund", "partial_refund"
+  amount    Int
+  status    PaymentStatus
+  data      Json?
+  createdAt DateTime      @default(now())
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+}
+
+// ============================================================================
+// FAVORITES
+// ============================================================================
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@index([userId])
+}
+
+// ============================================================================
+// MESSAGING SYSTEM
+// ============================================================================
+
+model Conversation {
+  id           String   @id @default(cuid())
+  propertyId   String?  // Optional reference to a property
+  lastMessage  String?
+  lastMessageAt DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([lastMessageAt])
+}
+
+model ConversationParticipant {
+  id             String   @id @default(cuid())
+  conversationId String
+  userId         String
+  lastReadAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  read           Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("MessageSender", fields: [senderId], references: [id])
+
+  @@index([conversationId])
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+// ============================================================================
+// REVIEW SYSTEM
+// ============================================================================
+
+model Review {
+  id         String   @id @default(cuid())
+  propertyId String
+  bookingId  String   @unique
+  authorId   String
+  rating     Int      // 1-5
+  comment    String?
+  
+  // Category ratings (optional 1-5)
+  cleanliness    Int?
+  location       Int?
+  communication  Int?
+  accuracy       Int?
+  value          Int?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  booking  Booking  @relation(fields: [bookingId], references: [id])
+  author   User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+
+  @@index([propertyId])
+  @@index([authorId])
+  @@index([propertyId, rating])
+}
+
+// ============================================================================
+// WALLET & FINANCIAL SYSTEM
+// ============================================================================
+
+model Wallet {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  // Balances are computed from transactions, but cached here for performance
+  availableBalance Int     @default(0)
+  pendingBalance   Int     @default(0)
+  totalEarnings    Int     @default(0)
+  totalWithdrawn   Int     @default(0)
+  currency         String  @default("ETB")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+enum WalletTransactionType {
+  BOOKING_PAYMENT
+  PLATFORM_FEE
+  REFUND
+  WITHDRAWAL
+  ADJUSTMENT
+}
+
+enum WalletTransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+model WalletTransaction {
+  id          String                  @id @default(cuid())
+  walletId    String
+  type        WalletTransactionType
+  status      WalletTransactionStatus @default(PENDING)
+  amount      Int                     // Positive = credit, negative = debit
+  balance     Int                     // Balance after this transaction
+  currency    String                  @default("ETB")
+  description String?
+  reference   String?                 // Reference to booking/payment/withdrawal
+  metadata    Json?
+  createdAt   DateTime                @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId])
+  @@index([walletId, createdAt])
+  @@index([type])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REJECTED
+}
+
+model Withdrawal {
+  id              String           @id @default(cuid())
+  userId          String
+  amount          Int
+  currency        String           @default("ETB")
+  status          WithdrawalStatus @default(PENDING)
+  payoutAccountId String
+  processedAt     DateTime?
+  failureReason   String?
+  adminNote       String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id])
+  payoutAccount PayoutAccount @relation(fields: [payoutAccountId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+model PayoutAccount {
+  id            String   @id @default(cuid())
+  userId        String
+  provider      String   // "bank", "chapa", "telebirr"
+  accountName   String
+  accountNumber String
+  bankName      String?
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  withdrawals Withdrawal[]
+
+  @@index([userId])
+}
+
+// ============================================================================
+// NOTIFICATION SYSTEM
+// ============================================================================
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_COMPLETED
+  BOOKING_REQUEST
+  NEW_MESSAGE
+  NEW_REVIEW
+  LISTING_PUBLISHED
+  LISTING_PAUSED
+  WITHDRAWAL_APPROVED
+  WITHDRAWAL_REJECTED
+  PAYMENT_RECEIVED
+  PAYMENT_FAILED
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  data      Json?            // Related resource info
+  link      String?          // Deep link
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, read])
+  @@index([userId, createdAt])
+}
+
+// ============================================================================
+// AUDIT LOG
+// ============================================================================
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entity     String
+  entityId   String?
+  data       Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([action])
+  @@index([createdAt])
+}

@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 40 20% 98%;
+    --foreground: 220 20% 10%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+    
+    /* Habesha Gold / Warm Amber */
+    --primary: 38 92% 50%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Warm Sand / Neutral Secondary */
+    --secondary: 40 25% 94%;
+    --secondary-foreground: 30 20% 20%;
+    
+    --muted: 40 15% 92%;
+    --muted-foreground: 220 10% 45%;
+    
+    /* Emerald / Ethiopian Green Accent */
+    --accent: 155 70% 40%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 38 92% 50%;
+    --radius: 0.85rem;
+  }
+
+  .dark {
+    --background: 224 25% 7%;
+    --foreground: 40 20% 96%;
+    
+    --card: 224 22% 11%;
+    --card-foreground: 40 20% 96%;
+    
+    --popover: 224 22% 11%;
+    --popover-foreground: 40 20% 96%;
+    
+    --primary: 38 92% 52%;
+    --primary-foreground: 224 25% 7%;
+    
+    --secondary: 224 20% 16%;
+    --secondary-foreground: 40 20% 90%;
+    
+    --muted: 224 18% 18%;
+    --muted-foreground: 220 10% 65%;
+    
+    --accent: 155 65% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 224 18% 18%;
+    --input: 224 18% 18%;
+    --ring: 38 92% 52%;
+  }
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.45);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: hsl(var(--card) / 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-header {
+  background: hsl(var(--background) / 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Subtle Ethiopian subtle pattern accent */
+.habesha-pattern {
+  background-image: radial-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
