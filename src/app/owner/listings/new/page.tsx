@@ -201,14 +201,14 @@ export default function NewListingPage() {
                 <select
                   value={formData.cityId}
                   onChange={(e) => setFormData({ ...formData, cityId: e.target.value })}
-                  className="w-full h-11 px-4 rounded-xl border border-input bg-background/60 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full h-11 px-4 rounded-xl border border-input bg-background/60 text-foreground text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                 >
-                  <option value="addis-ababa">Addis Ababa</option>
-                  <option value="bishoftu">Bishoftu (Debre Zeyit)</option>
-                  <option value="hawassa">Hawassa</option>
-                  <option value="bahir-dar">Bahir Dar</option>
-                  <option value="gondar">Gondar</option>
-                  <option value="dire-dawa">Dire Dawa</option>
+                  <option value="addis-ababa" className="bg-card text-foreground">Addis Ababa</option>
+                  <option value="bishoftu" className="bg-card text-foreground">Bishoftu (Debre Zeyit)</option>
+                  <option value="hawassa" className="bg-card text-foreground">Hawassa</option>
+                  <option value="bahir-dar" className="bg-card text-foreground">Bahir Dar</option>
+                  <option value="gondar" className="bg-card text-foreground">Gondar</option>
+                  <option value="dire-dawa" className="bg-card text-foreground">Dire Dawa</option>
                 </select>
               </div>
 

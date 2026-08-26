@@ -107,11 +107,11 @@ export function WithdrawalModal({ availableBalance, payoutAccounts }: Withdrawal
                 <select
                   value={selectedAccountId}
                   onChange={(e) => setSelectedAccountId(e.target.value)}
-                  className="w-full h-12 px-3 rounded-2xl border border-input bg-background/50 text-xs font-semibold focus:outline-none"
+                  className="w-full h-12 px-3 rounded-2xl border border-input bg-background/50 text-foreground text-xs font-semibold focus:outline-none cursor-pointer"
                 >
-                  <option value="default-acc">telebirr (+251 91 145 6789)</option>
-                  <option value="cbe-acc">Commercial Bank of Ethiopia (CBE - 1000123456789)</option>
-                  <option value="awash-acc">Awash Bank (AWSH - 0132049281)</option>
+                  <option value="default-acc" className="bg-card text-foreground">telebirr (+251 91 145 6789)</option>
+                  <option value="cbe-acc" className="bg-card text-foreground">Commercial Bank of Ethiopia (CBE - 1000123456789)</option>
+                  <option value="awash-acc" className="bg-card text-foreground">Awash Bank (AWSH - 0132049281)</option>
                 </select>
               </div>
 

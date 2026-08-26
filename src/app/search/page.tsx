@@ -176,13 +176,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               <select
                 name="bedrooms"
                 defaultValue={bedrooms || ""}
-                className="w-full h-10 px-3 rounded-xl border border-input bg-background/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 rounded-xl border border-input bg-background/60 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
               >
-                <option value="">Any number</option>
-                <option value="1">1+ Bedrooms</option>
-                <option value="2">2+ Bedrooms</option>
-                <option value="3">3+ Bedrooms</option>
-                <option value="4">4+ Bedrooms</option>
+                <option value="" className="bg-card text-foreground">Any number</option>
+                <option value="1" className="bg-card text-foreground">1+ Bedrooms</option>
+                <option value="2" className="bg-card text-foreground">2+ Bedrooms</option>
+                <option value="3" className="bg-card text-foreground">3+ Bedrooms</option>
+                <option value="4" className="bg-card text-foreground">4+ Bedrooms</option>
               </select>
             </div>
 
@@ -194,13 +194,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               <select
                 name="sort"
                 defaultValue={sort}
-                className="w-full h-10 px-3 rounded-xl border border-input bg-background/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 rounded-xl border border-input bg-background/60 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
               >
-                <option value="recommended">Recommended &amp; Featured</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest Listings</option>
+                <option value="recommended" className="bg-card text-foreground">Recommended &amp; Featured</option>
+                <option value="price_asc" className="bg-card text-foreground">Price: Low to High</option>
+                <option value="price_desc" className="bg-card text-foreground">Price: High to Low</option>
+                <option value="rating" className="bg-card text-foreground">Highest Rated</option>
+                <option value="newest" className="bg-card text-foreground">Newest Listings</option>
               </select>
             </div>
 
