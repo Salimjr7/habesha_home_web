@@ -1,25 +1,28 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
-// Capacitor server configuration:
-// For development on Android emulator: use http://10.0.2.2:3000
-// For development on physical device: use your machine's LAN IP, e.g. http://192.168.1.100:3000
-// For production: set CAPACITOR_SERVER_URL to your deployed production domain (e.g. https://ethiohome.et)
-const liveServerUrl =
-  process.env.CAPACITOR_SERVER_URL ||
-  (process.env.NODE_ENV === "development" ? "http://10.0.2.2:3000" : undefined);
+// Capacitor server configuration for EthioHome:
+//
+// The Next.js app uses server-side rendering (Prisma, sessions, API routes),
+// so Capacitor must point the webview at a running Next.js server.
+//
+// For LOCAL development: set CAPACITOR_SERVER_URL to http://<YOUR_LAN_IP>:3000
+//   then run: npm run dev -- --hostname 0.0.0.0
+//   then run: npx cap sync android
+//
+// For PRODUCTION: deploy your Next.js app and set CAPACITOR_SERVER_URL to
+//   your production domain (e.g. https://ethiohome.et)
+
+const serverUrl =
+  process.env.CAPACITOR_SERVER_URL || "http://192.168.0.100:3000";
 
 const config: CapacitorConfig = {
   appId: "com.ethiohome.app",
   appName: "EthioHome",
-  webDir: "public",
-  server: liveServerUrl
-    ? {
-        url: liveServerUrl,
-        cleartext: true,
-      }
-    : {
-        androidScheme: "https",
-      },
+  webDir: "out",
+  server: {
+    url: serverUrl,
+    cleartext: true,
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 1500,
