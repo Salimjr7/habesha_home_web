@@ -498,7 +498,7 @@ model Message {
 model Review {
   id         String   @id @default(cuid())
   propertyId String
-  bookingId  String   @unique
+  bookingId  String?  @unique
   authorId   String
   rating     Int      // 1-5
   comment    String?
@@ -514,7 +514,7 @@ model Review {
   updatedAt  DateTime @updatedAt
 
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  booking  Booking  @relation(fields: [bookingId], references: [id])
+  booking  Booking? @relation(fields: [bookingId], references: [id])
   author   User     @relation("ReviewAuthor", fields: [authorId], references: [id])
 
   @@index([propertyId])

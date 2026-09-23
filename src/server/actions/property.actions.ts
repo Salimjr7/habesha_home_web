@@ -283,3 +283,35 @@ export async function updatePropertyAction(
   }
 }
 
+export async function deletePropertyAction(propertyId: string): Promise<ActionResponse> {
+  try {
+    const user = await requireAuth();
+
+    const property = await prisma.property.findUnique({
+      where: { id: propertyId },
+      select: { id: true, slug: true, ownerId: true, title: true },
+    });
+
+    if (!property) {
+      throw new NotFoundError("Property");
+    }
+
+    if (property.ownerId !== user.id && (user as unknown as { role?: string }).role !== "ADMIN") {
+      const { AuthorizationError } = await import("@/lib/errors");
+      throw new AuthorizationError("You do not own this property");
+    }
+
+    await prisma.property.delete({
+      where: { id: propertyId },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/search");
+    revalidatePath("/owner");
+    revalidatePath("/owner/listings");
+
+    return createSuccessResponse({ deleted: true, title: property.title });
+  } catch (err) {
+    return createErrorResponse(err);
+  }
+}

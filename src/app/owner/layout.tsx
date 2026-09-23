@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -7,18 +9,27 @@ import {
   Wallet,
   MessageSquare,
   PlusCircle,
-  Settings,
   ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRealtime } from "@/components/shared/realtime-provider";
+import { usePathname } from "next/navigation";
 
 export default function OwnerLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const { unreadMessagesCount } = useRealtime();
+
   const navItems = [
     { label: "Dashboard", href: "/owner", icon: LayoutDashboard },
     { label: "My Listings", href: "/owner/listings", icon: Home },
     { label: "Reservations", href: "/owner/bookings", icon: Calendar },
     { label: "Wallet & Payouts", href: "/owner/wallet", icon: Wallet },
-    { label: "Messages", href: "/account/messages", icon: MessageSquare },
+    {
+      label: "Messages",
+      href: "/account/messages",
+      icon: MessageSquare,
+      badge: unreadMessagesCount,
+    },
   ];
 
   return (
@@ -63,14 +74,26 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
           <nav className="space-y-1.5 pt-4">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-colors"
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                    isActive
+                      ? "bg-primary/10 text-primary border border-primary/20"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
+                  }`}
                 >
-                  <Icon className="w-4 h-4 text-green-500" />
-                  <span>{item.label}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-green-500" />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && item.badge > 0 ? (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500 text-white font-black animate-pulse">
+                      {item.badge}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}

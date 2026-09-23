@@ -3,18 +3,38 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, User, PlusCircle, Compass, Menu, X, Shield, Wallet, LogOut } from "lucide-react";
+import { Search, Heart, User, PlusCircle, Compass, Menu, X, Shield, Wallet, LogOut, MessageSquare, Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { useSession, signOut } from "@/lib/auth/client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { useRealtime } from "@/components/shared/realtime-provider";
 
 export function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const {
+    unreadMessagesCount,
+    unreadNotificationsCount,
+    notifications,
+    markNotificationRead,
+  } = useRealtime();
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const user = session?.user as
     | { id: string; name: string; email: string; image?: string | null; role?: string }
@@ -103,6 +123,95 @@ export function Header() {
 
           {session?.user ? (
             <div className="flex items-center gap-2 pl-2 border-l border-border/60">
+              {/* Real-time Messages Icon */}
+              <Link href="/account/messages" className="relative">
+                <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground" title="Messages">
+                  <MessageSquare className="w-5 h-5" />
+                  {unreadMessagesCount > 0 && (
+                    <span className="absolute top-1.5 right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-green-500 px-1 text-[10px] font-black text-white shadow-xs animate-pulse">
+                      {unreadMessagesCount > 9 ? "9+" : unreadMessagesCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+
+              {/* Real-time Notifications Bell with Dropdown */}
+              <div className="relative" ref={notifRef}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
+                  className="relative text-muted-foreground hover:text-foreground"
+                  title="Notifications"
+                >
+                  <Bell className="w-5 h-5" />
+                  {unreadNotificationsCount > 0 && (
+                    <span className="absolute top-1.5 right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white shadow-xs animate-pulse">
+                      {unreadNotificationsCount > 9 ? "9+" : unreadNotificationsCount}
+                    </span>
+                  )}
+                </Button>
+
+                {/* Notifications Popover Dropdown */}
+                {notifDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-3xl border border-border/80 bg-card shadow-2xl p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="flex items-center justify-between pb-2 border-b border-border/60">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-sm text-foreground">Notifications</span>
+                        {unreadNotificationsCount > 0 && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 font-bold">
+                            {unreadNotificationsCount} new
+                          </span>
+                        )}
+                      </div>
+                      {notifications.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => markNotificationRead(undefined, true)}
+                          className="text-[11px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 font-medium"
+                        >
+                          <CheckCheck className="w-3.5 h-3.5" /> Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="max-h-72 overflow-y-auto space-y-2">
+                      {notifications.length > 0 ? (
+                        notifications.slice(0, 8).map((notif) => (
+                          <div
+                            key={notif.id}
+                            onClick={() => {
+                              markNotificationRead(notif.id);
+                              if (notif.link) {
+                                setNotifDropdownOpen(false);
+                                window.location.href = notif.link;
+                              }
+                            }}
+                            className={`p-3 rounded-2xl cursor-pointer transition-all border ${
+                              !notif.read
+                                ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
+                                : "bg-secondary/40 border-transparent hover:bg-secondary/70"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <h4 className="font-bold text-xs text-foreground truncate">{notif.title}</h4>
+                              <span className="text-[9px] text-muted-foreground whitespace-nowrap">
+                                {new Date(notif.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{notif.message}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="py-6 text-center text-xs text-muted-foreground">
+                          No notifications yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <Link href="/account/favorites">
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500" title="Saved Homes">
                   <Heart className="w-5 h-5" />
@@ -213,9 +322,14 @@ export function Header() {
               <Link
                 href="/account/messages"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium rounded-lg hover:bg-secondary"
+                className="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg hover:bg-secondary"
               >
-                Messages
+                <span>Messages</span>
+                {unreadMessagesCount > 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500 text-white font-bold">
+                    {unreadMessagesCount} new
+                  </span>
+                )}
               </Link>
               {isOwner && (
                 <Link

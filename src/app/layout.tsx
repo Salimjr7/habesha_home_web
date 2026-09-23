@@ -40,10 +40,17 @@ export const metadata: Metadata = {
       "The premier home rental marketplace for Ethiopia. Verified properties, backup power & water assurance, and instant local payments.",
   },
   icons: {
-    icon: "/ethiohome-logo.png",
-    apple: "/ethiohome-logo.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
   },
 };
+
+import { RealtimeProvider } from "@/components/shared/realtime-provider";
 
 export default function RootLayout({
   children,
@@ -59,10 +66,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster position="top-right" richColors closeButton />
+          <RealtimeProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster position="top-right" richColors closeButton />
+          </RealtimeProvider>
         </ThemeProvider>
       </body>
     </html>

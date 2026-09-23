@@ -11,9 +11,13 @@ import {
   PlusCircle,
   Clock,
   CheckCircle2,
+  MessageSquare,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
+import { MessageService } from "@/server/services/message.service";
 
 export const dynamic = "force-dynamic";
 
@@ -30,9 +34,10 @@ export default async function OwnerDashboardPage() {
   let propertiesCount = 0;
   let activeBookings: any[] = [];
   let totalReservations = 0;
+  let recentConversations: any[] = [];
 
   try {
-    const [wallet, propsCount, bookings, bookingsCount] = await Promise.all([
+    const [wallet, propsCount, bookings, bookingsCount, convs] = await Promise.all([
       prisma.wallet.findUnique({ where: { userId } }),
       prisma.property.count({ where: { ownerId: userId } }),
       prisma.booking.findMany({
@@ -47,12 +52,14 @@ export default async function OwnerDashboardPage() {
       prisma.booking.count({
         where: { property: { ownerId: userId } },
       }),
+      MessageService.getUserConversations(userId),
     ]);
 
     hostWallet = wallet;
     propertiesCount = propsCount;
     activeBookings = bookings;
     totalReservations = bookingsCount;
+    recentConversations = convs;
   } catch (error) {
     console.error("Error loading owner dashboard metrics:", error);
   }
@@ -144,6 +151,67 @@ export default async function OwnerDashboardPage() {
           <div className="text-2xl font-extrabold text-foreground">{totalReservations}</div>
           <span className="text-xs text-muted-foreground font-medium">Confirmed &amp; pending</span>
         </div>
+      </div>
+
+      {/* Recent Guest Inquiries & Messages */}
+      <div className="p-8 rounded-3xl border border-border/70 bg-card space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-foreground">Guest Inquiries &amp; Messages</h2>
+              <p className="text-xs text-muted-foreground">Direct real-time conversations with prospective and booked guests</p>
+            </div>
+          </div>
+          <Link href="/account/messages" className="text-xs text-primary font-semibold hover:underline inline-flex items-center gap-1">
+            Open Messenger <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {recentConversations.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {recentConversations.slice(0, 4).map((c) => (
+              <Link
+                key={c.id}
+                href={`/account/messages?conversationId=${c.id}`}
+                className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                  c.unread
+                    ? "bg-primary/10 border-primary/30 hover:bg-primary/15"
+                    : "bg-secondary/30 border-border/60 hover:bg-secondary/60"
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative shrink-0">
+                    <Avatar src={c.otherUser?.image} name={c.otherUser?.name || "Guest User"} size="md" />
+                    {c.unread && (
+                      <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full" />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-sm text-foreground truncate">{c.otherUser?.name || "Guest User"}</h4>
+                    <p className="text-xs text-muted-foreground truncate">{c.lastMessage || "Direct inquiry"}</p>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="text-[10px] text-muted-foreground block">
+                    {c.lastMessageAt ? new Date(c.lastMessageAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
+                  </span>
+                  <span className="text-[11px] font-semibold text-primary inline-flex items-center gap-0.5 mt-0.5">
+                    Reply &rarr;
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-muted-foreground text-sm space-y-1 rounded-2xl border border-dashed border-border/70 p-6">
+            <p className="font-medium text-foreground text-xs">No guest messages yet</p>
+            <p className="text-[11px] text-muted-foreground">When renters inquire about your homes or send messages, they will appear here in real time.</p>
+          </div>
+        )}
       </div>
 
       {/* Recent Guest Reservations Table */}

@@ -15,10 +15,13 @@ import {
   Bed,
   Bath,
   DoorOpen,
-  Share2,
-  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PropertyActionButtons } from "@/components/property/property-action-buttons";
+import { PropertyReviewSection } from "@/components/property/property-review-section";
+import { HostChatModal } from "@/components/property/host-chat-modal";
+import { getServerSession } from "@/lib/auth/session";
+import { FavoriteService } from "@/server/services/favorite.service";
 
 export const dynamic = "force-dynamic";
 
@@ -100,6 +103,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     }
   }
 
+  const session = await getServerSession();
+  const userFavoriteIds = await FavoriteService.getUserFavoriteIds(session?.user?.id);
+  const isFavorite = userFavoriteIds.includes(property.id);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Title & Action Bar */}
@@ -120,14 +127,12 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             {property.title}
           </h1>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <Button variant="outline" size="sm" className="rounded-xl border-border/80">
-              <Share2 className="w-4 h-4 mr-2" /> Share
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-xl border-border/80">
-              <Heart className="w-4 h-4 mr-2 text-red-500" /> Save
-            </Button>
-          </div>
+          <PropertyActionButtons
+            propertyId={property.id}
+            title={property.title}
+            slug={property.slug}
+            initialIsFavorite={isFavorite}
+          />
         </div>
 
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pt-1">
@@ -174,16 +179,30 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
 
           {/* Host Profile Header */}
-          <div className="flex items-center gap-4 p-6 rounded-3xl border border-border/70 bg-card">
-            <Avatar src={property.owner.image} name={property.owner.name} size="lg" />
-            <div>
-              <h3 className="font-bold text-lg text-foreground">
-                Hosted by {property.owner.name}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {property.owner.profile?.bio || "Verified EthioHome Superhost"}
-              </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl border border-border/70 bg-card">
+            <div className="flex items-center gap-4">
+              <Avatar src={property.owner.image} name={property.owner.name} size="lg" />
+              <div>
+                <h3 className="font-bold text-lg text-foreground">
+                  Hosted by {property.owner.name}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {property.owner.profile?.bio || "Verified EthioHome Superhost"}
+                </p>
+              </div>
             </div>
+
+            <HostChatModal
+              propertyId={property.id}
+              propertyTitle={property.title}
+              propertySlug={property.slug}
+              hostId={property.owner.id}
+              hostName={property.owner.name}
+              hostImage={property.owner.image}
+              buttonVariant="default"
+              buttonText="Chat with Host"
+              className="font-bold bg-primary text-primary-foreground shadow-xs shrink-0"
+            />
           </div>
 
           {/* Infrastructure Assurances Highlight */}
@@ -240,33 +259,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
 
           {/* Reviews Section */}
-          <div id="reviews" className="space-y-6 border-t border-border/60 pt-8">
-            <div className="flex items-center gap-2">
-              <Star className="w-6 h-6 fill-amber-400 text-amber-400" />
-              <h2 className="text-2xl font-bold text-foreground">
-                {property.avgRating > 0 ? property.avgRating.toFixed(2) : "New"} • {property.reviewCount} reviews
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              {property.reviews.map((rev: any) => (
-                <div key={rev.id} className="p-6 rounded-3xl border border-border/70 bg-card space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Avatar src={rev.author.image} name={rev.author.name} size="md" />
-                    <div>
-                      <h4 className="font-bold text-sm text-foreground">{rev.author.name}</h4>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <span>★ {rev.rating} stars</span>
-                        <span>•</span>
-                        <span>Verified Guest Stay</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-foreground/80 leading-relaxed">{rev.comment}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <PropertyReviewSection
+            propertyId={property.id}
+            slug={property.slug}
+            avgRating={property.avgRating}
+            reviewCount={property.reviewCount}
+            reviews={property.reviews || []}
+          />
         </div>
 
         {/* Right Column: Sticky Booking Widget */}

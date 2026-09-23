@@ -189,18 +189,46 @@ export class MessageService {
       },
     });
 
-    // Dispatch notification to recipient
+    // Dispatch notification to recipient & emit real-time event
     if (targetRecipientId) {
-      await prisma.notification.create({
-        data: {
+      try {
+        const notif = await prisma.notification.create({
+          data: {
+            userId: targetRecipientId,
+            type: NotificationType.NEW_MESSAGE,
+            title: `New message from ${message.sender.name}`,
+            message: content.length > 60 ? content.slice(0, 57) + "..." : content,
+            link: `/account/messages?conversationId=${convId}`,
+            data: { conversationId: convId, messageId: message.id },
+          },
+        });
+
+        // Dynamic import / require to prevent circular references
+        const { realtimeHub } = await import("@/lib/realtime/event-hub");
+
+        realtimeHub.emitMessage(targetRecipientId, {
+          conversationId: convId,
+          senderId,
+          recipientId: targetRecipientId,
+          senderName: message.sender.name,
+          senderImage: message.sender.image,
+          content,
+          createdAt: message.createdAt.toISOString(),
+          messageId: message.id,
+        });
+
+        realtimeHub.emitNotification(targetRecipientId, {
+          id: notif.id,
           userId: targetRecipientId,
-          type: NotificationType.NEW_MESSAGE,
-          title: `New message from ${message.sender.name}`,
-          message: content.length > 60 ? content.slice(0, 57) + "..." : content,
-          link: `/account/messages/${convId}`,
-          data: { conversationId: convId, messageId: message.id },
-        },
-      });
+          type: notif.type,
+          title: notif.title,
+          message: notif.message,
+          link: notif.link,
+          createdAt: notif.createdAt.toISOString(),
+        });
+      } catch (err) {
+        console.error("Realtime dispatch failed:", err);
+      }
     }
 
     return message;

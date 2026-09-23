@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { formatETB, calculateNights } from "@/lib/utils";
 import { calculateBookingPrice } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
-import { Zap, ShieldCheck, Calendar as CalendarIcon, Users } from "lucide-react";
+import { Zap, ShieldCheck, Calendar as CalendarIcon, Users, MessageSquare } from "lucide-react";
 import { createBookingAction } from "@/server/actions/booking.actions";
+import { HostChatModal } from "@/components/property/host-chat-modal";
 import { toast } from "sonner";
 
 interface BookingWidgetProps {
@@ -229,6 +230,21 @@ export function BookingWidget({ property }: BookingWidgetProps) {
       {/* Trust guarantees */}
       <div className="pt-2 flex items-center justify-center gap-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
         <ShieldCheck className="w-4 h-4" /> EthioHome Host Guarantee Included
+      </div>
+
+      {/* Real-time Chat with Host button */}
+      <div className="pt-3 border-t border-border/50">
+        <HostChatModal
+          propertyId={property.id}
+          propertyTitle={property.title}
+          propertySlug={property.slug}
+          hostId={(property as any).owner?.id || ""}
+          hostName={(property as any).owner?.name || "Host"}
+          hostImage={(property as any).owner?.image}
+          buttonVariant="outline"
+          buttonText="Chat with Host before booking"
+          className="w-full font-semibold text-xs py-2.5 rounded-xl border-border/80 hover:bg-secondary"
+        />
       </div>
     </div>
   );
