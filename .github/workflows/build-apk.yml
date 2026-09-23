@@ -45,6 +45,9 @@ jobs:
           BETTER_AUTH_SECRET: "ci-secret-for-build-only"
           NEXT_PUBLIC_APP_URL: "https://ethiohome.et"
 
+      - name: Ensure Android Assets Directory Exists
+        run: mkdir -p android/app/src/main/assets
+
       - name: Sync Capacitor Android
         run: npx cap sync android
         env:
