@@ -1,10 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Header } from "@/components/navigation/header";
 import { Footer } from "@/components/navigation/footer";
+import { MobileBottomNav } from "@/components/navigation/mobile-bottom-nav";
+import { CapacitorProvider } from "@/components/shared/capacitor-provider";
+import { RealtimeProvider } from "@/components/shared/realtime-provider";
 import { Toaster } from "sonner";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b132b" },
+  ],
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,8 +65,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { RealtimeProvider } from "@/components/shared/realtime-provider";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,12 +79,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <RealtimeProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <Toaster position="top-right" richColors closeButton />
-          </RealtimeProvider>
+          <CapacitorProvider>
+            <RealtimeProvider>
+              <Header />
+              <main className="flex-1 pb-16 md:pb-0">{children}</main>
+              <Footer />
+              <MobileBottomNav />
+              <Toaster position="top-right" richColors closeButton />
+            </RealtimeProvider>
+          </CapacitorProvider>
         </ThemeProvider>
       </body>
     </html>

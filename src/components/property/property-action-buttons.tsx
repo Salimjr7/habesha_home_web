@@ -7,6 +7,7 @@ import { toggleFavoriteAction } from "@/server/actions/favorite.actions";
 import { useSession } from "@/lib/auth/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useCapacitor } from "@/components/shared/capacitor-provider";
 
 interface PropertyActionButtonsProps {
   propertyId: string;
@@ -23,6 +24,7 @@ export function PropertyActionButtons({
 }: PropertyActionButtonsProps) {
   const router = useRouter();
   const { data: session } = useSession();
+  const { hapticFeedback, shareListing } = useCapacitor();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isPending, startTransition] = useTransition();
   const [showShareMenu, setShowShareMenu] = useState(false);
@@ -31,20 +33,15 @@ export function PropertyActionButtons({
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : `https://ethiohome.et/property/${slug}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${title} | EthioHome`,
-          text: `Check out this verified Ethiopian property on EthioHome!`,
-          url,
-        });
-        toast.success("Shared successfully!");
-        return;
-      } catch (err: any) {
-        if (err.name !== "AbortError") {
-          // Fall through to share menu
-        }
-      }
+    try {
+      await shareListing({
+        title: `${title} | EthioHome`,
+        text: `Check out this verified Ethiopian property on EthioHome!`,
+        url,
+      });
+      return;
+    } catch {
+      // Fallback
     }
 
     setShowShareMenu(!showShareMenu);
@@ -74,7 +71,8 @@ export function PropertyActionButtons({
       return;
     }
 
-    // Optimistic UI update
+    // Tactile haptic feedback and optimistic UI update
+    hapticFeedback("medium");
     const nextState = !isFavorite;
     setIsFavorite(nextState);
 
