@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { AuthenticationError } from "@/lib/errors";
+import { AuthenticationError, AuthorizationError } from "@/lib/errors";
+import prisma from "@/lib/db";
 
 /**
  * Get current authenticated user session in Server Components and Server Actions
@@ -11,6 +12,18 @@ export async function getServerSession() {
     const session = await auth.api.getSession({
       headers: headerList,
     });
+
+    if (session?.user?.id) {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true, banned: true },
+      });
+      if (dbUser) {
+        (session.user as unknown as { role?: string; banned?: boolean }).role = dbUser.role;
+        (session.user as unknown as { role?: string; banned?: boolean }).banned = dbUser.banned;
+      }
+    }
+
     return session;
   } catch (error) {
     console.error("Error getting session:", error);
@@ -34,12 +47,18 @@ export async function requireAuth() {
  */
 export async function requireRole(allowedRoles: string[]) {
   const user = await requireAuth();
-  const userRole = (user as unknown as { role?: string }).role || "RENTER";
-  
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
+
+  const userRole = dbUser?.role || (user as unknown as { role?: string }).role || "RENTER";
+
   if (!allowedRoles.includes(userRole)) {
-    const { AuthorizationError } = await import("@/lib/errors");
     throw new AuthorizationError("You do not have permission to access this resource");
   }
-  
-  return user;
+
+  return { ...user, role: userRole };
 }
+

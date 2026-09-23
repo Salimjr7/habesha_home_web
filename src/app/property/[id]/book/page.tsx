@@ -94,7 +94,7 @@ export default async function BookPage({ params, searchParams }: BookPageProps) 
                 <Image src={coverImage} alt={booking.property.title} fill className="object-cover" />
               </div>
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
                   {booking.property.city?.name}
                 </span>
                 <h3 className="font-bold text-sm line-clamp-2 text-foreground">
@@ -145,7 +145,7 @@ export default async function BookPage({ params, searchParams }: BookPageProps) 
             <div className="p-4 rounded-2xl bg-secondary/50 flex items-center gap-3 text-xs text-muted-foreground">
               <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>
-                Your funds are securely held by Habesha Home escrow until 24 hours after check-in.
+                Your funds are securely held by EthioHome escrow until 24 hours after check-in.
               </span>
             </div>
           </div>

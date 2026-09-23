@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
           Executive Platform Analytics
         </span>
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">
-          Habesha Home Administration
+          EthioHome Administration
         </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
           Real-time metrics, host payouts, listing approvals, and platform fee collection.
@@ -58,14 +58,14 @@ export default async function AdminDashboardPage() {
           <span className="text-xs text-muted-foreground">Chapa + telebirr volume</span>
         </div>
 
-        <div className="p-6 rounded-3xl border border-amber-500/30 bg-amber-500/5 space-y-2">
-          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-green-500/30 bg-green-500/5 space-y-2">
+          <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">
             Platform Revenue (5%)
           </span>
           <div className="text-2xl font-extrabold text-foreground">
             {formatETB(stats.platformRevenue)}
           </div>
-          <span className="text-xs text-muted-foreground">Habesha Home net commission</span>
+          <span className="text-xs text-muted-foreground">EthioHome net commission</span>
         </div>
 
         <div className="p-6 rounded-3xl border border-border/70 bg-card space-y-2">
@@ -87,9 +87,9 @@ export default async function AdminDashboardPage() {
 
       {/* Pending Actions Alert */}
       {stats.pendingWithdrawalsCount > 0 && (
-        <div className="p-6 rounded-3xl border border-amber-500/40 bg-amber-500/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="p-6 rounded-3xl border border-green-500/40 bg-green-500/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-6 h-6 text-amber-600 dark:text-amber-400 shrink-0" />
+            <AlertCircle className="w-6 h-6 text-green-600 dark:text-green-400 shrink-0" />
             <div>
               <h3 className="font-bold text-sm text-foreground">
                 {stats.pendingWithdrawalsCount} Host Withdrawal(s) Awaiting Review
@@ -101,7 +101,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           <Link href="/admin/withdrawals">
-            <Button size="sm" className="font-bold bg-amber-600 hover:bg-amber-500 text-white shrink-0">
+            <Button size="sm" className="font-bold bg-green-600 hover:bg-green-500 text-white shrink-0">
               Audit Withdrawals
             </Button>
           </Link>

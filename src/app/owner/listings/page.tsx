@@ -35,7 +35,7 @@ export default async function OwnerListingsPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
             Properties
           </span>
           <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">
@@ -77,7 +77,7 @@ export default async function OwnerListingsPage() {
 
                   <div className="p-5 space-y-2">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="font-semibold text-amber-600 dark:text-amber-400 uppercase">
+                      <span className="font-semibold text-green-600 dark:text-green-400 uppercase">
                         {prop.propertyType.replace("_", " ")}
                       </span>
                       <div className="flex items-center gap-1 font-semibold text-foreground">
@@ -104,7 +104,7 @@ export default async function OwnerListingsPage() {
                       <Eye className="w-3.5 h-3.5 mr-1.5" /> View Listing
                     </Button>
                   </Link>
-                  <Link href={`/owner/listings/new`} className="flex-1">
+                  <Link href={`/owner/listings/${prop.id}/edit`} className="flex-1">
                     <Button variant="secondary" size="sm" className="w-full text-xs font-semibold">
                       <Edit className="w-3.5 h-3.5 mr-1.5" /> Edit
                     </Button>
@@ -116,7 +116,7 @@ export default async function OwnerListingsPage() {
         </div>
       ) : (
         <div className="p-12 text-center rounded-3xl border border-border/80 bg-card space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center mx-auto">
             <PlusCircle className="w-7 h-7" />
           </div>
           <h3 className="text-xl font-bold">You haven&apos;t created any listings yet</h3>

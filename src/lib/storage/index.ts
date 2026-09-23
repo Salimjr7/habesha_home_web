@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — File and Property Image Storage Abstraction
+// EthioHome — File and Property Image Storage Abstraction
 // ============================================================================
 
 export interface UploadResult {
@@ -59,15 +59,15 @@ export class CloudinaryStorageProvider implements StorageProvider {
     this.apiSecret = process.env.CLOUDINARY_API_SECRET || "";
   }
 
-  async uploadFile(_file: Buffer | Blob | File, filename: string, folder: string = "habesha-home"): Promise<UploadResult> {
+  async uploadFile(_file: Buffer | Blob | File, filename: string, folder: string = "ethiohome"): Promise<UploadResult> {
     if (!this.cloudName || !this.apiKey) {
       // Fallback
       return new LocalStorageProvider().uploadFile(_file, filename, folder);
     }
 
     return {
-      url: `https://res.cloudinary.com/${this.cloudName}/image/upload/v1/habesha-home/${filename}`,
-      key: `habesha-home/${filename}`,
+      url: `https://res.cloudinary.com/${this.cloudName}/image/upload/v1/ethiohome/${filename}`,
+      key: `ethiohome/${filename}`,
     };
   }
 

@@ -60,7 +60,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
 
         <div className="pt-6 border-t border-border/60 text-xs text-muted-foreground">
-          <span>Habesha Home Platform Control</span>
+          <span>EthioHome Platform Control</span>
         </div>
       </aside>
 

@@ -110,7 +110,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <ShieldCheck className="w-4 h-4" /> 100% In-Person Verified
             </span>
           )}
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-600 dark:text-green-400">
             {property.propertyType.replace("_", " ")}
           </span>
         </div>
@@ -138,7 +138,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
           <span>•</span>
           <div className="flex items-center gap-1.5 font-medium">
-            <MapPin className="w-4 h-4 text-amber-500" />
+            <MapPin className="w-4 h-4 text-green-500" />
             <span>{property.address}</span>
           </div>
         </div>
@@ -155,19 +155,19 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           <div className="flex items-center justify-between p-6 rounded-3xl border border-border/70 bg-card">
             <div className="flex items-center gap-6 divide-x divide-border/60">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-amber-500" />
+                <Users className="w-5 h-5 text-green-500" />
                 <span className="font-semibold text-sm">{property.maxGuests} Guests</span>
               </div>
               <div className="pl-6 flex items-center gap-2">
-                <DoorOpen className="w-5 h-5 text-amber-500" />
+                <DoorOpen className="w-5 h-5 text-green-500" />
                 <span className="font-semibold text-sm">{property.bedrooms} Bedrooms</span>
               </div>
               <div className="pl-6 flex items-center gap-2">
-                <Bed className="w-5 h-5 text-amber-500" />
+                <Bed className="w-5 h-5 text-green-500" />
                 <span className="font-semibold text-sm">{property.beds} Beds</span>
               </div>
               <div className="pl-6 flex items-center gap-2">
-                <Bath className="w-5 h-5 text-amber-500" />
+                <Bath className="w-5 h-5 text-green-500" />
                 <span className="font-semibold text-sm">{property.bathrooms} Baths</span>
               </div>
             </div>
@@ -181,7 +181,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 Hosted by {property.owner.name}
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {property.owner.profile?.bio || "Verified Habesha Home Superhost"}
+                {property.owner.profile?.bio || "Verified EthioHome Superhost"}
               </p>
             </div>
           </div>
@@ -191,7 +191,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <h2 className="text-xl font-bold text-foreground">Ethiopian Living Assurances</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl border border-border/60 bg-secondary/40 flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                <div className="p-2 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400">
                   <Zap className="w-5 h-5" />
                 </div>
                 <div>

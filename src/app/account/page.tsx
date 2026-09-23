@@ -15,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AccountActions } from "@/components/account/account-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -60,25 +61,30 @@ export default async function AccountDashboardPage() {
           <div className="space-y-1 text-center sm:text-left">
             <h1 className="text-2xl font-black text-foreground">{session.user.name}</h1>
             <p className="text-xs text-muted-foreground">{session.user.email}</p>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-600 dark:text-green-400">
               <span>{session.user.role || "RENTER"} Member</span>
             </div>
           </div>
         </div>
 
-        {isOwner ? (
-          <Link href="/owner">
-            <Button className="font-bold bg-primary text-primary-foreground">
-              <Home className="w-4 h-4 mr-2" /> Host Hub &amp; Wallet
-            </Button>
-          </Link>
-        ) : (
-          <Link href="/owner/listings/new">
-            <Button variant="outline" className="border-amber-500/30 text-amber-600 dark:text-amber-400">
-              <PlusCircle className="w-4 h-4 mr-2" /> Become a Property Host
-            </Button>
-          </Link>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          {isOwner ? (
+            <Link href="/owner">
+              <Button className="font-bold bg-primary text-primary-foreground">
+                <Home className="w-4 h-4 mr-2" /> Host Hub &amp; Wallet
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/owner/listings/new">
+              <Button variant="outline" className="border-green-500/30 text-green-600 dark:text-green-400">
+                <PlusCircle className="w-4 h-4 mr-2" /> Become a Property Host
+              </Button>
+            </Link>
+          )}
+
+          {/* Top header only shows Log Out for a clean and uncluttered view */}
+          <AccountActions showDeleteButton={false} />
+        </div>
       </div>
 
       {/* Quick Navigation Cards */}
@@ -87,7 +93,7 @@ export default async function AccountDashboardPage() {
           href="/account/bookings"
           className="p-6 rounded-3xl border border-border/70 bg-card hover:border-primary/50 hover:shadow-lg transition-all space-y-3"
         >
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center">
             <Calendar className="w-5 h-5" />
           </div>
           <h3 className="font-bold text-base text-foreground">My Bookings</h3>
@@ -138,7 +144,7 @@ export default async function AccountDashboardPage() {
                     className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                       b.status === "CONFIRMED"
                         ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                        : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                        : "bg-green-500/15 text-green-600 dark:text-green-400"
                     }`}
                   >
                     {b.status}
@@ -170,6 +176,26 @@ export default async function AccountDashboardPage() {
             </Link>
           </div>
         )}
+      </div>
+
+      {/* Account Settings & Danger Zone */}
+      <div className="p-8 rounded-3xl border border-border/80 bg-card/60 space-y-6">
+        <div>
+          <h3 className="text-lg font-bold text-foreground">Account &amp; Security Settings</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Manage your session or permanently remove your EthioHome account and property listings.
+          </p>
+        </div>
+
+        <div className="p-6 rounded-2xl bg-secondary/30 border border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="font-semibold text-sm text-foreground block">Session &amp; Account Control</span>
+            <p className="text-xs text-muted-foreground">
+              Log out of your account on this device, or permanently delete your account and associated properties.
+            </p>
+          </div>
+          <AccountActions />
+        </div>
       </div>
     </div>
   );

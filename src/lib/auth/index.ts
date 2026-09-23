@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Better Auth Server Configuration
+// EthioHome — Better Auth Server Configuration
 // ============================================================================
 
 import { betterAuth } from "better-auth";
@@ -40,7 +40,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
   },
-  secret: process.env.BETTER_AUTH_SECRET || "habesha-home-super-secret-key-development-32chars",
+  secret: process.env.BETTER_AUTH_SECRET || "ethiohome-super-secret-key-development-32chars",
   baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
 });
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Typed Application Errors
+// EthioHome — Typed Application Errors
 // ============================================================================
 
 export class AppError extends Error {
@@ -95,10 +95,31 @@ export function getClientErrorMessage(error: unknown): string {
   return "An unexpected error occurred. Please try again.";
 }
 
+import { ZodError } from "zod";
+
 /**
  * Safe error response for API/Server Actions
  */
 export function createErrorResponse(error: unknown) {
+  if (error instanceof ZodError) {
+    const firstIssue = error.issues[0];
+    const message = firstIssue?.message || "Validation failed";
+    const errors: Record<string, string[]> = {};
+    for (const issue of error.issues) {
+      const field = issue.path.join(".") || "form";
+      if (!errors[field]) errors[field] = [];
+      errors[field].push(issue.message);
+    }
+    return {
+      success: false as const,
+      error: {
+        message,
+        code: "VALIDATION_ERROR",
+        errors,
+      },
+    };
+  }
+
   if (isAppError(error)) {
     return {
       success: false as const,
@@ -115,7 +136,7 @@ export function createErrorResponse(error: unknown) {
   return {
     success: false as const,
     error: {
-      message: "An unexpected error occurred. Please try again.",
+      message: (error as Error)?.message || "An unexpected error occurred. Please try again.",
       code: "INTERNAL_ERROR",
     },
   };

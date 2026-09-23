@@ -102,7 +102,7 @@ export default async function AdminWithdrawalsPage() {
                               ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
                               : w.status === "REJECTED"
                               ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                              : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                              : "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20"
                           }`}
                         >
                           {w.status === "PENDING" && <Clock className="w-3 h-3" />}

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
-import { Home, Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 function LoginForm() {
@@ -30,7 +31,7 @@ function LoginForm() {
       if (res.error) {
         toast.error(res.error.message || "Invalid credentials.");
       } else {
-        toast.success("Welcome back to Habesha Home!");
+        toast.success("Welcome back to EthioHome!")
         router.push(redirectUrl);
         router.refresh();
       }
@@ -41,58 +42,36 @@ function LoginForm() {
     }
   };
 
-  // Demo shortcut login helper
-  const handleQuickDemoLogin = (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword("Password123!");
-  };
-
   return (
     <div className="w-full max-w-md rounded-3xl border border-border/80 bg-card p-8 sm:p-10 shadow-2xl space-y-6">
       {/* Brand Header */}
       <div className="text-center space-y-2">
-        <Link href="/" className="inline-flex items-center gap-2 mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
-            <Home className="w-5 h-5" />
+        <Link href="/" className="inline-flex items-center justify-center gap-2 mb-3">
+          {/* Light Mode Logo */}
+          <Image
+            src="/ethiohome-logo.png"
+            alt="EthioHome Logo"
+            width={160}
+            height={40}
+            className="h-9 w-auto object-contain dark:hidden"
+            priority
+          />
+          {/* Dark Mode Logo */}
+          <div className="hidden dark:flex items-center bg-white/95 px-3 py-1.5 rounded-xl shadow-xs">
+            <Image
+              src="/ethiohome-logo.png"
+              alt="EthioHome Logo"
+              width={150}
+              height={38}
+              className="h-7 w-auto object-contain"
+              priority
+            />
           </div>
-          <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-amber-600 to-amber-700 dark:from-amber-400 dark:to-yellow-300 bg-clip-text text-transparent">
-            Habesha Home
-          </span>
         </Link>
         <h1 className="text-2xl font-black text-foreground">Sign In to Your Account</h1>
         <p className="text-xs text-muted-foreground">
           Manage your Ethiopian stays, bookings, and host earnings
         </p>
-      </div>
-
-      {/* Demo Fast Fill Buttons */}
-      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2 text-xs">
-        <span className="font-bold text-amber-600 dark:text-amber-400 block">
-          ⚡ Quick Demo Sign-in:
-        </span>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => handleQuickDemoLogin("renter@habeshahome.et")}
-            className="flex-1 py-1.5 px-2.5 rounded-lg bg-background text-[11px] font-semibold text-foreground hover:bg-secondary border border-border/60 transition-colors"
-          >
-            Renter Demo
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickDemoLogin("dawit@habeshahome.et")}
-            className="flex-1 py-1.5 px-2.5 rounded-lg bg-background text-[11px] font-semibold text-foreground hover:bg-secondary border border-border/60 transition-colors"
-          >
-            Host / Owner Demo
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickDemoLogin("admin@habeshahome.et")}
-            className="flex-1 py-1.5 px-2.5 rounded-lg bg-background text-[11px] font-semibold text-foreground hover:bg-secondary border border-border/60 transition-colors"
-          >
-            Admin Demo
-          </button>
-        </div>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-4 text-xs">

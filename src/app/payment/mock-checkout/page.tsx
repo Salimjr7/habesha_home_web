@@ -52,7 +52,7 @@ export default function MockCheckoutPage({
           <div className="flex items-center gap-3">
             <div
               className={`w-10 h-10 rounded-2xl flex items-center justify-center font-extrabold text-white text-sm shadow-md ${
-                isTelebirr ? "bg-blue-600 shadow-blue-600/30" : "bg-amber-600 shadow-amber-600/30"
+                isTelebirr ? "bg-blue-600 shadow-blue-600/30" : "bg-green-600 shadow-green-600/30"
               }`}
             >
               {isTelebirr ? "tb" : "Ch"}
@@ -62,7 +62,7 @@ export default function MockCheckoutPage({
                 {isTelebirr ? "telebirr Payment Portal" : "Chapa Secure Checkout"}
               </h2>
               <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
-                Habesha Home Sandbox
+                EthioHome Sandbox
               </span>
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function MockCheckoutPage({
           className={`w-full h-12 text-base font-bold text-white shadow-lg transition-all ${
             isTelebirr
               ? "bg-blue-600 hover:bg-blue-500 shadow-blue-600/25"
-              : "bg-amber-600 hover:bg-amber-500 shadow-amber-600/25"
+              : "bg-green-600 hover:bg-green-500 shadow-green-600/25"
           }`}
         >
           {isAuthorizing ? (

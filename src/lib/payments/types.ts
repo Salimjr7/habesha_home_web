@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Payment Provider Abstraction
+// EthioHome — Payment Provider Abstraction
 // ============================================================================
 
 export interface PaymentInitData {

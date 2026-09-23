@@ -1,7 +1,7 @@
 "use client";
 
 // ============================================================================
-// Habesha Home — Better Auth React Client
+// EthioHome — Better Auth React Client
 // ============================================================================
 
 import { createAuthClient } from "better-auth/react";

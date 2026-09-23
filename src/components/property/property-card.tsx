@@ -76,7 +76,7 @@ export function PropertyCard({ property, initialFavorite = false }: PropertyCard
             </span>
           )}
           {property.instantBooking && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold bg-amber-500/90 text-white backdrop-blur-md shadow-xs">
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold bg-green-500/90 text-white backdrop-blur-md shadow-xs">
               <Zap className="w-3 h-3" />
               Instant
             </span>
@@ -101,7 +101,7 @@ export function PropertyCard({ property, initialFavorite = false }: PropertyCard
         {/* City tag on bottom corner of image */}
         {property.city && (
           <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 text-xs font-medium text-white/95 drop-shadow-md">
-            <MapPin className="w-3.5 h-3.5 text-amber-400" />
+            <MapPin className="w-3.5 h-3.5 text-green-400" />
             <span>{property.city.name}</span>
           </div>
         )}
@@ -110,7 +110,7 @@ export function PropertyCard({ property, initialFavorite = false }: PropertyCard
       {/* Content Section */}
       <div className="flex flex-col flex-1 p-5">
         <div className="flex items-center justify-between gap-2 mb-1.5">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
             {property.propertyType.replace("_", " ")}
           </span>
           <div className="flex items-center gap-1 text-xs font-semibold">

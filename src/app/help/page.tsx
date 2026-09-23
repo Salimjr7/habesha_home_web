@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 export default function HelpPage() {
   const faqs = [
     {
-      q: "How does the Habesha Home Infrastructure Guarantee work?",
-      a: "Every verified property on Habesha Home is inspected to ensure standby generator operation, continuous water reservoir tank capacity, and high-speed Wi-Fi. In the rare event of utility disruption, our 24/7 guest support coordinates immediate remediation or relocation.",
+      q: "How does the EthioHome Infrastructure Guarantee work?",
+      a: "Every verified property on EthioHome is inspected to ensure standby generator operation, continuous water reservoir tank capacity, and high-speed Wi-Fi. In the rare event of utility disruption, our 24/7 guest support coordinates immediate remediation or relocation.",
     },
     {
       q: "Which payment methods are supported in Ethiopia?",
@@ -25,11 +25,11 @@ export default function HelpPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
       <div className="text-center space-y-4 max-w-2xl mx-auto">
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+        <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
           Support &amp; FAQ
         </span>
         <h1 className="text-4xl font-extrabold text-foreground tracking-tight">
-          How Habesha Home Works
+          How EthioHome Works
         </h1>
         <p className="text-sm text-muted-foreground leading-relaxed">
           Everything you need to know about booking verified Ethiopian stays, local payments, and host guarantees.
@@ -39,7 +39,7 @@ export default function HelpPage() {
       {/* Assurance Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="p-6 rounded-3xl border border-border/70 bg-card space-y-2">
-          <Zap className="w-6 h-6 text-amber-500" />
+          <Zap className="w-6 h-6 text-green-500" />
           <h3 className="font-bold text-sm text-foreground">24/7 Standby Power</h3>
           <p className="text-xs text-muted-foreground">Automatic backup generators installed in verified listings.</p>
         </div>
@@ -69,7 +69,7 @@ export default function HelpPage() {
       </div>
 
       {/* Contact Banner */}
-      <div className="p-8 rounded-3xl bg-gradient-to-r from-amber-600/10 via-yellow-500/10 to-amber-600/10 border border-amber-500/30 text-center space-y-4">
+      <div className="p-8 rounded-3xl bg-gradient-to-r from-amber-600/10 via-yellow-500/10 to-amber-600/10 border border-green-500/30 text-center space-y-4">
         <h3 className="font-bold text-lg text-foreground">Still have questions?</h3>
         <p className="text-xs text-muted-foreground max-w-md mx-auto">
           Our Addis Ababa customer operations team is available 24/7 on phone, telebirr, and live chat.

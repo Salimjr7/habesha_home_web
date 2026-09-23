@@ -167,7 +167,7 @@ export function BookingWidget({ property }: BookingWidgetProps) {
         <Button
           type="submit"
           disabled={isSubmitting || nights <= 0}
-          className="w-full h-12 text-base font-bold bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-md shadow-amber-500/25 hover:opacity-95"
+          className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 text-white shadow-md shadow-green-500/25 hover:opacity-95"
         >
           {isSubmitting ? (
             "Reserving..."
@@ -228,7 +228,7 @@ export function BookingWidget({ property }: BookingWidgetProps) {
 
       {/* Trust guarantees */}
       <div className="pt-2 flex items-center justify-center gap-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-        <ShieldCheck className="w-4 h-4" /> Habesha Home Host Guarantee Included
+        <ShieldCheck className="w-4 h-4" /> EthioHome Host Guarantee Included
       </div>
     </div>
   );

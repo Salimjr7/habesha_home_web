@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Payment Provider Factory
+// EthioHome — Payment Provider Factory
 // ============================================================================
 
 import { PaymentProvider } from "./types";

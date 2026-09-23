@@ -29,9 +29,10 @@ export default async function OwnerDashboardPage() {
   let hostWallet: any = null;
   let propertiesCount = 0;
   let activeBookings: any[] = [];
+  let totalReservations = 0;
 
   try {
-    [hostWallet, propertiesCount, activeBookings] = await Promise.all([
+    const [wallet, propsCount, bookings, bookingsCount] = await Promise.all([
       prisma.wallet.findUnique({ where: { userId } }),
       prisma.property.count({ where: { ownerId: userId } }),
       prisma.booking.findMany({
@@ -43,20 +44,28 @@ export default async function OwnerDashboardPage() {
         orderBy: { createdAt: "desc" },
         take: 5,
       }),
+      prisma.booking.count({
+        where: { property: { ownerId: userId } },
+      }),
     ]);
-  } catch {
-    // fallback
+
+    hostWallet = wallet;
+    propertiesCount = propsCount;
+    activeBookings = bookings;
+    totalReservations = bookingsCount;
+  } catch (error) {
+    console.error("Error loading owner dashboard metrics:", error);
   }
 
-  const availableBalance = hostWallet?.availableBalance || 4500000;
-  const totalEarnings = hostWallet?.totalEarnings || 8900000;
+  const availableBalance = hostWallet?.availableBalance ?? 0;
+  const totalEarnings = hostWallet?.totalEarnings ?? 0;
 
   return (
     <div className="space-y-10">
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
             Host Overview
           </span>
           <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">
@@ -87,7 +96,7 @@ export default async function OwnerDashboardPage() {
             </div>
           </div>
           <div className="text-2xl font-extrabold text-foreground">{formatETB(availableBalance)}</div>
-          <Link href="/owner/wallet" className="text-xs text-amber-600 dark:text-amber-400 font-semibold hover:underline inline-flex items-center gap-1">
+          <Link href="/owner/wallet" className="text-xs text-green-600 dark:text-green-400 font-semibold hover:underline inline-flex items-center gap-1">
             Withdraw to bank or telebirr <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -98,7 +107,7 @@ export default async function OwnerDashboardPage() {
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Total Earnings
             </span>
-            <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
@@ -116,7 +125,7 @@ export default async function OwnerDashboardPage() {
               <Home className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-foreground">{propertiesCount || 3}</div>
+          <div className="text-2xl font-extrabold text-foreground">{propertiesCount}</div>
           <Link href="/owner/listings" className="text-xs text-primary font-semibold hover:underline inline-flex items-center gap-1">
             Manage listings <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
@@ -132,7 +141,7 @@ export default async function OwnerDashboardPage() {
               <Calendar className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-foreground">{activeBookings.length || 5}</div>
+          <div className="text-2xl font-extrabold text-foreground">{totalReservations}</div>
           <span className="text-xs text-muted-foreground font-medium">Confirmed &amp; pending</span>
         </div>
       </div>
@@ -170,7 +179,7 @@ export default async function OwnerDashboardPage() {
                         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
                           b.status === "CONFIRMED"
                             ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                            : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                            : "bg-green-500/15 text-green-600 dark:text-green-400"
                         }`}
                       >
                         {b.status}

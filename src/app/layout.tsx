@@ -14,8 +14,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Habesha Home — Premium Ethiopian Home Rental Marketplace",
-    template: "%s | Habesha Home",
+    default: "EthioHome — Premium Ethiopian Home Rental Marketplace",
+    template: "%s | EthioHome",
   },
   description:
     "Discover, book, and enjoy verified homes, luxury apartments, and lakefront villas across Ethiopia. Pay seamlessly with Chapa and Telebirr.",
@@ -24,20 +24,24 @@ export const metadata: Metadata = {
     "Addis Ababa apartments",
     "Bishoftu villas",
     "Hawassa guest houses",
-    "Habesha Home",
+    "EthioHome",
     "Telebirr booking",
     "Chapa payment",
   ],
-  authors: [{ name: "Habesha Home Team" }],
-  creator: "Habesha Home",
+  authors: [{ name: "EthioHome Team" }],
+  creator: "EthioHome",
   openGraph: {
     type: "website",
     locale: "en_ET",
-    url: "https://habeshahome.et",
-    siteName: "Habesha Home",
-    title: "Habesha Home — Find a place that feels like home in Ethiopia",
+    url: "https://ethiohome.et",
+    siteName: "EthioHome",
+    title: "EthioHome — Find a place that feels like home in Ethiopia",
     description:
       "The premier home rental marketplace for Ethiopia. Verified properties, backup power & water assurance, and instant local payments.",
+  },
+  icons: {
+    icon: "/ethiohome-logo.png",
+    apple: "/ethiohome-logo.png",
   },
 };
 

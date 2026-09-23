@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Home, Search, Heart, User, PlusCircle, Compass, Menu, X, Shield, Wallet } from "lucide-react";
+import { Search, Heart, User, PlusCircle, Compass, Menu, X, Shield, Wallet, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { useSession, signOut } from "@/lib/auth/client";
 import { useState } from "react";
 import { Avatar } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
 export function Header() {
   const pathname = usePathname();
@@ -25,16 +27,25 @@ export function Header() {
       <div className="max-w-7xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
-            <Home className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-400 dark:via-yellow-300 dark:to-amber-500 bg-clip-text text-transparent">
-              Habesha Home
-            </span>
-            <span className="text-[10px] text-muted-foreground -mt-1 font-medium tracking-wider uppercase">
-              Ethiopian Living
-            </span>
+          {/* Light Mode Logo */}
+          <Image
+            src="/ethiohome-logo.png"
+            alt="EthioHome Logo"
+            width={160}
+            height={40}
+            className="h-9 w-auto object-contain dark:hidden"
+            priority
+          />
+          {/* Dark Mode Logo with clean pill container for contrast */}
+          <div className="hidden dark:flex items-center bg-white/95 px-3 py-1.5 rounded-xl shadow-xs">
+            <Image
+              src="/ethiohome-logo.png"
+              alt="EthioHome Logo"
+              width={150}
+              height={38}
+              className="h-7 w-auto object-contain"
+              priority
+            />
           </div>
         </Link>
 
@@ -66,7 +77,7 @@ export function Header() {
 
           {isOwner ? (
             <Link href="/owner">
-              <Button variant="outline" size="sm" className="border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-500/5 hover:bg-amber-500/10">
+              <Button variant="outline" size="sm" className="border-green-500/30 text-green-600 dark:text-green-400 bg-green-500/5 hover:bg-green-500/10">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Host Dashboard
               </Button>
@@ -81,7 +92,7 @@ export function Header() {
 
           {isAdmin && (
             <Link href="/admin">
-              <Button variant="ghost" size="sm" className="text-emerald-600 dark:text-emerald-400">
+              <Button variant="ghost" size="sm" className="text-green-600 dark:text-green-400">
                 <Shield className="w-4 h-4 mr-1.5" />
                 Admin
               </Button>
@@ -93,12 +104,12 @@ export function Header() {
           {session?.user ? (
             <div className="flex items-center gap-2 pl-2 border-l border-border/60">
               <Link href="/account/favorites">
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500">
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500" title="Saved Homes">
                   <Heart className="w-5 h-5" />
                 </Button>
               </Link>
 
-              <Link href="/account" className="flex items-center gap-2.5 p-1 rounded-full hover:bg-secondary transition-colors">
+              <Link href="/account" className="flex items-center gap-2 p-1 rounded-full hover:bg-secondary transition-colors" title="My Account">
                 <Avatar
                   src={session.user.image}
                   name={session.user.name}
@@ -106,6 +117,20 @@ export function Header() {
                   className="ring-2 ring-primary/20"
                 />
               </Link>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={async () => {
+                  await signOut();
+                  toast.success("Logged out successfully");
+                  window.location.href = "/";
+                }}
+                className="text-muted-foreground hover:text-destructive transition-colors"
+                title="Log Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -155,7 +180,7 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/60 text-sm font-medium"
             >
-              <Compass className="w-4 h-4 text-amber-500" />
+              <Compass className="w-4 h-4 text-green-500" />
               Explore All
             </Link>
             <Link
@@ -196,7 +221,7 @@ export function Header() {
                 <Link
                   href="/owner"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm font-medium rounded-lg text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+                  className="block px-3 py-2 text-sm font-medium rounded-lg text-green-600 dark:text-green-400 hover:bg-green-500/10"
                 >
                   Host Dashboard & Wallet
                 </Link>

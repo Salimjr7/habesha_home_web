@@ -46,39 +46,18 @@ export default async function OwnerWalletPage() {
     // fallback
   }
 
-  const availableBalance = wallet?.availableBalance || 4500000;
-  const pendingBalance = wallet?.pendingBalance || 1200000;
-  const totalEarnings = wallet?.totalEarnings || 8900000;
-  const totalWithdrawn = wallet?.totalWithdrawn || 3200000;
-  const transactions = wallet?.transactions || [
-    {
-      id: "tx-1",
-      type: "BOOKING_PAYMENT",
-      amount: 722500,
-      balance: 4500000,
-      currency: "ETB",
-      description: "Guest booking payout for Bole Atlas Penthouse",
-      createdAt: new Date(),
-      status: "COMPLETED",
-    },
-    {
-      id: "tx-2",
-      type: "WITHDRAWAL",
-      amount: -2500000,
-      balance: 3777500,
-      currency: "ETB",
-      description: "Withdrawal to telebirr (+251911456789)",
-      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      status: "COMPLETED",
-    },
-  ];
+  const availableBalance = wallet?.availableBalance ?? 0;
+  const pendingBalance = wallet?.pendingBalance ?? 0;
+  const totalEarnings = wallet?.totalEarnings ?? 0;
+  const totalWithdrawn = wallet?.totalWithdrawn ?? 0;
+  const transactions = wallet?.transactions || [];
 
   return (
     <div className="space-y-10">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
             Financial Ledger
           </span>
           <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">
@@ -105,8 +84,8 @@ export default async function OwnerWalletPage() {
           <span className="text-xs text-muted-foreground">Ready for immediate withdrawal</span>
         </div>
 
-        <div className="p-6 rounded-3xl border border-amber-500/30 bg-amber-500/5 space-y-2">
-          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-green-500/30 bg-green-500/5 space-y-2">
+          <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">
             Pending Escrow
           </span>
           <div className="text-3xl font-extrabold text-foreground">{formatETB(pendingBalance)}</div>
@@ -139,30 +118,41 @@ export default async function OwnerWalletPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl border-2 border-primary/30 bg-primary/5 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400">
-                <span className="w-2 h-2 rounded-full bg-blue-500"></span> telebirr SuperApp
-              </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                Default
-              </span>
-            </div>
-            <p className="text-sm font-bold text-foreground">+251 91 145 6789</p>
-            <p className="text-xs text-muted-foreground">Dawit Haile (Ethio Telecom Verified)</p>
+        {payoutAccounts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {payoutAccounts.map((acc: any) => (
+              <div
+                key={acc.id}
+                className={`p-5 rounded-2xl border space-y-2 ${
+                  acc.isDefault
+                    ? "border-primary/40 bg-primary/5"
+                    : "border-border/70 bg-card"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
+                    <Building className="w-3.5 h-3.5 text-green-500" />{" "}
+                    {acc.provider === "TELEBIRR" ? "telebirr SuperApp" : acc.bankName || acc.provider}
+                  </span>
+                  {acc.isDefault && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                      Default
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm font-bold text-foreground">{acc.accountNumber}</p>
+                <p className="text-xs text-muted-foreground">{acc.accountName}</p>
+              </div>
+            ))}
           </div>
-
-          <div className="p-5 rounded-2xl border border-border/70 bg-card space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
-                <Building className="w-3.5 h-3.5 text-amber-500" /> Commercial Bank of Ethiopia (CBE)
-              </span>
-            </div>
-            <p className="text-sm font-bold text-foreground">1000123456789</p>
-            <p className="text-xs text-muted-foreground">Dawit Haile</p>
+        ) : (
+          <div className="p-6 text-center rounded-2xl border border-dashed border-border/80 bg-secondary/20">
+            <p className="text-sm font-semibold text-foreground">No payout accounts registered yet</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Add your telebirr phone number or CBE / Awash / BOA bank account when initiating a withdrawal.
+            </p>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Transaction History Ledger */}
@@ -172,45 +162,54 @@ export default async function OwnerWalletPage() {
           <span className="text-xs text-muted-foreground font-mono">Immutable audit records</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-border/60 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                <th className="pb-3">Date</th>
-                <th className="pb-3">Description</th>
-                <th className="pb-3">Type</th>
-                <th className="pb-3 text-right">Amount (ETB)</th>
-                <th className="pb-3 text-right">Balance</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/40">
-              {transactions.map((tx: any) => {
-                const isCredit = tx.amount > 0;
-                return (
-                  <tr key={tx.id} className="text-xs">
-                    <td className="py-4 text-muted-foreground">{formatDate(tx.createdAt)}</td>
-                    <td className="py-4 font-semibold text-foreground">{tx.description}</td>
-                    <td className="py-4">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        {tx.type.replace("_", " ")}
-                      </span>
-                    </td>
-                    <td
-                      className={`py-4 text-right font-bold ${
-                        isCredit ? "text-emerald-600 dark:text-emerald-400" : "text-foreground"
-                      }`}
-                    >
-                      {isCredit ? `+${formatETB(tx.amount)}` : formatETB(Math.abs(tx.amount))}
-                    </td>
-                    <td className="py-4 text-right font-medium text-muted-foreground">
-                      {formatETB(tx.balance)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        {transactions.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border/60 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <th className="pb-3">Date</th>
+                  <th className="pb-3">Description</th>
+                  <th className="pb-3">Type</th>
+                  <th className="pb-3 text-right">Amount (ETB)</th>
+                  <th className="pb-3 text-right">Balance</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                {transactions.map((tx: any) => {
+                  const isCredit = tx.amount > 0;
+                  return (
+                    <tr key={tx.id} className="text-xs">
+                      <td className="py-4 text-muted-foreground">{formatDate(tx.createdAt)}</td>
+                      <td className="py-4 font-semibold text-foreground">{tx.description}</td>
+                      <td className="py-4">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          {tx.type.replace("_", " ")}
+                        </span>
+                      </td>
+                      <td
+                        className={`py-4 text-right font-bold ${
+                          isCredit ? "text-emerald-600 dark:text-emerald-400" : "text-foreground"
+                        }`}
+                      >
+                        {isCredit ? `+${formatETB(tx.amount)}` : formatETB(Math.abs(tx.amount))}
+                      </td>
+                      <td className="py-4 text-right font-medium text-muted-foreground">
+                        {formatETB(tx.balance)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-8 text-center rounded-2xl border border-dashed border-border/80 bg-secondary/20 space-y-2">
+            <p className="text-sm font-semibold text-foreground">No ledger transactions yet</p>
+            <p className="text-xs text-muted-foreground">
+              When guests book your properties, payouts and withdrawals will automatically be recorded here in Ethiopian Birr.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ export default async function OwnerBookingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+        <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
           Reservations
         </span>
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">
@@ -58,7 +58,7 @@ export default async function OwnerBookingsPage() {
                     className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                       b.status === "CONFIRMED"
                         ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                        : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                        : "bg-green-500/15 text-green-600 dark:text-green-400"
                     }`}
                   >
                     {b.status}
@@ -102,7 +102,7 @@ export default async function OwnerBookingsPage() {
         </div>
       ) : (
         <div className="p-12 text-center rounded-3xl border border-border/80 bg-card space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center mx-auto">
             <Calendar className="w-7 h-7" />
           </div>
           <h3 className="text-xl font-bold">No reservations yet</h3>

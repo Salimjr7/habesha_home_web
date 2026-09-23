@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Email & Notification Dispatcher Abstraction
+// EthioHome — Email & Notification Dispatcher Abstraction
 // ============================================================================
 
 export interface SendEmailOptions {
@@ -20,7 +20,7 @@ export class ConsoleEmailService implements EmailService {
       console.log("==================== [HABESHA HOME EMAIL DISPATCH] ====================");
       console.log(`To: ${options.to}`);
       console.log(`Subject: ${options.subject}`);
-      console.log(`From: ${options.from || "Habesha Home <noreply@habeshahome.et>"}`);
+      console.log(`From: ${options.from || "EthioHome <noreply@ethiohome.et>"}`);
       console.log("----------------------------------------------------------------------");
       console.log(options.text || options.html);
       console.log("======================================================================");
@@ -49,7 +49,7 @@ export class ResendEmailService implements EmailService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: options.from || "Habesha Home <notifications@habeshahome.et>",
+          from: options.from || "EthioHome <notifications@ethiohome.et>",
           to: options.to,
           subject: options.subject,
           html: options.html,
@@ -85,7 +85,7 @@ export const EmailTemplates = {
       subject: `Booking Confirmed: ${propertyTitle}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-          <h2 style="color: #d97706; margin-top: 0;">Habesha Home Booking Confirmation</h2>
+          <h2 style="color: #d97706; margin-top: 0;">EthioHome Booking Confirmation</h2>
           <p>Selam <strong>${renterName}</strong>,</p>
           <p>Your stay at <strong>${propertyTitle}</strong> has been successfully confirmed!</p>
           <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin: 20px 0;">
@@ -93,8 +93,8 @@ export const EmailTemplates = {
             <p style="margin: 4px 0;"><strong>Check-out:</strong> ${checkOut}</p>
             <p style="margin: 4px 0;"><strong>Total Paid:</strong> ${total}</p>
           </div>
-          <p>You can message your host or view check-in details inside your Habesha Home account.</p>
-          <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">Melkam Gize (Have a wonderful stay) — The Habesha Home Team</p>
+          <p>You can message your host or view check-in details inside your EthioHome account.</p>
+          <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">Melkam Gize (Have a wonderful stay) — The EthioHome Team</p>
         </div>
       `,
     };

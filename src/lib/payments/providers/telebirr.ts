@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — telebirr Payment Provider Implementation
+// EthioHome — telebirr Payment Provider Implementation
 // ============================================================================
 
 import {
@@ -62,7 +62,7 @@ export class TelebirrProvider implements PaymentProvider {
         appId: this.appId,
         outTradeNo: data.txRef,
         totalAmount: amountInETB,
-        subject: data.title || "Habesha Home Reservation",
+        subject: data.title || "EthioHome Reservation",
         notifyUrl: data.callbackUrl,
         returnUrl: data.returnUrl,
         shortCode: this.shortCode,

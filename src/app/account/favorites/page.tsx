@@ -24,7 +24,7 @@ export default async function FavoritesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+        <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
           Saved Properties
         </span>
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight mt-1">

@@ -33,7 +33,7 @@ export function PropertySearch() {
         {/* Where Input */}
         <div className="p-3 px-4 flex flex-col justify-center rounded-2xl hover:bg-neutral-100/80 dark:hover:bg-secondary/40 transition-colors">
           <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-muted-foreground flex items-center gap-1.5 mb-1">
-            <MapPin className="w-3.5 h-3.5 text-amber-500" />
+            <MapPin className="w-3.5 h-3.5 text-green-500" />
             Where
           </label>
           <input
@@ -48,7 +48,7 @@ export function PropertySearch() {
         {/* Check In */}
         <div className="p-3 px-4 flex flex-col justify-center rounded-2xl hover:bg-neutral-100/80 dark:hover:bg-secondary/40 transition-colors">
           <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-muted-foreground flex items-center gap-1.5 mb-1">
-            <CalendarIcon className="w-3.5 h-3.5 text-amber-500" />
+            <CalendarIcon className="w-3.5 h-3.5 text-green-500" />
             Check-in
           </label>
           <input
@@ -62,7 +62,7 @@ export function PropertySearch() {
         {/* Check Out */}
         <div className="p-3 px-4 flex flex-col justify-center rounded-2xl hover:bg-neutral-100/80 dark:hover:bg-secondary/40 transition-colors">
           <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-muted-foreground flex items-center gap-1.5 mb-1">
-            <CalendarIcon className="w-3.5 h-3.5 text-amber-500" />
+            <CalendarIcon className="w-3.5 h-3.5 text-green-500" />
             Check-out
           </label>
           <input
@@ -77,7 +77,7 @@ export function PropertySearch() {
         <div className="p-3 px-4 flex items-center justify-between gap-3 rounded-2xl hover:bg-neutral-100/80 dark:hover:bg-secondary/40 transition-colors">
           <div className="flex flex-col justify-center">
             <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-muted-foreground flex items-center gap-1.5 mb-1">
-              <Users className="w-3.5 h-3.5 text-amber-500" />
+              <Users className="w-3.5 h-3.5 text-green-500" />
               Guests
             </label>
             <select
@@ -95,7 +95,7 @@ export function PropertySearch() {
           <Button
             type="submit"
             size="icon"
-            className="w-12 h-12 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/30 hover:scale-105 active:scale-95 transition-all shrink-0"
+            className="w-12 h-12 rounded-2xl bg-gradient-to-r from-green-500 via-green-600 to-emerald-500 text-white shadow-lg shadow-green-500/30 hover:scale-105 active:scale-95 transition-all shrink-0"
             aria-label="Search"
           >
             <Search className="w-5 h-5" />

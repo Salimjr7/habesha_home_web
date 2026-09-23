@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — Chapa Payment Provider Implementation
+// EthioHome — Chapa Payment Provider Implementation
 // ============================================================================
 
 import {
@@ -51,7 +51,7 @@ export class ChapaProvider implements PaymentProvider {
         tx_ref: data.txRef,
         callback_url: data.callbackUrl,
         return_url: data.returnUrl,
-        "customization[title]": data.title || "Habesha Home Booking",
+        "customization[title]": data.title || "EthioHome Booking",
         "customization[description]": data.description || "Ethiopian Home Rental Booking",
         meta: data.metadata,
       };

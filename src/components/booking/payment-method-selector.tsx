@@ -63,7 +63,7 @@ export function PaymentMethodSelector({ bookingId }: PaymentMethodSelectorProps)
           }`}
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center font-bold">
               <CreditCard className="w-5 h-5" />
             </div>
             {selectedProvider === "CHAPA" && (
@@ -74,7 +74,7 @@ export function PaymentMethodSelector({ bookingId }: PaymentMethodSelectorProps)
           <p className="text-xs text-muted-foreground mt-1">
             Debit/Credit Cards, CBE Birr, Awash Bank, Dashen, Telebirr &amp; Internet Banking
           </p>
-          <div className="mt-3 pt-2 border-t border-border/40 text-[10px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
+          <div className="mt-3 pt-2 border-t border-border/40 text-[10px] font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">
             Instant Confirmation
           </div>
         </div>
@@ -110,7 +110,7 @@ export function PaymentMethodSelector({ bookingId }: PaymentMethodSelectorProps)
         <Button
           onClick={handlePay}
           disabled={isProcessing}
-          className="w-full h-12 text-base font-bold bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/25 hover:opacity-95"
+          className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 text-white shadow-lg shadow-green-500/25 hover:opacity-95"
         >
           {isProcessing ? "Connecting to Gateway..." : `Pay with ${selectedProvider === "CHAPA" ? "Chapa" : "telebirr"}`}
         </Button>

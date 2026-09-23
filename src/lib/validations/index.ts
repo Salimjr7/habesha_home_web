@@ -87,12 +87,13 @@ export type ProfileInput = z.infer<typeof profileSchema>;
 export const propertyBasicSchema = z.object({
   title: z
     .string()
-    .min(5, "Title must be at least 5 characters")
+    .min(3, "Title must be at least 3 characters")
     .max(200, "Title must be less than 200 characters"),
   description: z
     .string()
-    .min(20, "Description must be at least 20 characters")
-    .max(5000, "Description must be less than 5000 characters"),
+    .max(5000, "Description must be less than 5000 characters")
+    .optional()
+    .or(z.literal("")),
   propertyType: z.enum([
     "APARTMENT",
     "HOUSE",
@@ -105,7 +106,11 @@ export const propertyBasicSchema = z.object({
   ]),
   listingType: z.enum(["SHORT_TERM", "LONG_TERM", "BOTH"]).default("SHORT_TERM"),
   cityId: z.string().min(1, "Please select a city"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
+  address: z
+    .string()
+    .max(300, "Address must be less than 300 characters")
+    .optional()
+    .or(z.literal("")),
 });
 
 export const propertyDetailsSchema = z.object({
@@ -127,15 +132,30 @@ export const propertyAmenitiesSchema = z.object({
   amenityIds: z.array(z.string()).min(1, "Select at least one amenity"),
 });
 
+export const propertyImagesSchema = z.object({
+  images: z
+    .array(
+      z.object({
+        url: z.string().min(1, "Image URL is required"),
+        isCover: z.boolean().default(false),
+        order: z.number().int().default(0),
+        alt: z.string().optional(),
+      })
+    )
+    .optional(),
+});
+
 export const createPropertySchema = propertyBasicSchema
   .merge(propertyDetailsSchema)
   .merge(propertyPricingSchema)
-  .merge(propertyAmenitiesSchema);
+  .merge(propertyAmenitiesSchema)
+  .merge(propertyImagesSchema);
 
 export type PropertyBasicInput = z.infer<typeof propertyBasicSchema>;
 export type PropertyDetailsInput = z.infer<typeof propertyDetailsSchema>;
 export type PropertyPricingInput = z.infer<typeof propertyPricingSchema>;
 export type PropertyAmenitiesInput = z.infer<typeof propertyAmenitiesSchema>;
+export type PropertyImagesInput = z.infer<typeof propertyImagesSchema>;
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
 
 // ============================================================================

@@ -129,7 +129,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
-            alt="Habesha Home Luxury Interior"
+            alt="EthioHome Luxury Interior"
             fill
             priority
             className="object-cover object-center filter brightness-[0.38] contrast-[1.08]"
@@ -139,7 +139,7 @@ export default async function HomePage() {
 
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
           {/* Tagline Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 backdrop-blur-md text-xs font-semibold tracking-wide uppercase shadow-lg shadow-amber-500/10 animate-in fade-in zoom-in-95 duration-500">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/20 border border-green-400/40 text-green-300 backdrop-blur-md text-xs font-semibold tracking-wide uppercase shadow-lg shadow-green-500/10 animate-in fade-in zoom-in-95 duration-500">
             <Sparkles className="w-3.5 h-3.5" />
             Find a place that feels like home
           </div>
@@ -147,7 +147,7 @@ export default async function HomePage() {
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Ethiopia&apos;s Premier <br />
-            <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-green-400 via-emerald-300 to-green-500 bg-clip-text text-transparent">
               Home Rental Experience
             </span>
           </h1>
@@ -190,7 +190,7 @@ export default async function HomePage() {
                 href={`/search?propertyType=${cat.slug}`}
                 className="group relative flex flex-col p-6 rounded-3xl border border-border/70 bg-card hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <div className="w-12 h-12 rounded-2xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                   <Icon className="w-6 h-6" />
                 </div>
                 <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">
@@ -211,7 +211,7 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
               Popular Cities
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight mt-1">
@@ -266,7 +266,7 @@ export default async function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-semibold uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-xs text-green-400 font-semibold uppercase tracking-wider">
                   <MapPin className="w-3.5 h-3.5" />
                   Ethiopia
                 </div>
@@ -284,11 +284,11 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
               Verified Stays
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight mt-1">
-              Featured Habesha Homes
+              Featured EthioHomes
             </h2>
           </div>
           <Link href="/search">
@@ -309,10 +309,10 @@ export default async function HomePage() {
       {/* 5. TRUST & THE ETHIOPIAN LIVING STANDARD */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="rounded-3xl border border-border/80 bg-gradient-to-br from-amber-500/5 via-card to-amber-500/10 p-8 sm:p-14 overflow-hidden relative">
+        <div className="rounded-3xl border border-border/80 bg-gradient-to-br from-green-500/5 via-card to-green-500/10 p-8 sm:p-14 overflow-hidden relative">
           <div className="max-w-3xl space-y-4 mb-12">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400">
-              <ShieldCheck className="w-4 h-4" /> Habesha Home Guarantee
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-500/15 text-green-600 dark:text-green-400">
+              <ShieldCheck className="w-4 h-4" /> EthioHome Guarantee
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
               Hospitality Designed for the Ethiopian Reality
@@ -324,7 +324,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="p-6 rounded-2xl bg-card border border-border/60 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center">
                 <Zap className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-base text-foreground">24/7 Power Assurance</h3>
@@ -372,8 +372,8 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="rounded-3xl bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border border-neutral-800 text-white p-8 sm:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
           <div className="space-y-4 max-w-xl">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Host on Habesha Home
+            <span className="text-xs font-bold uppercase tracking-wider text-green-400">
+              Host on EthioHome
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
               Turn your property into monthly income
@@ -385,7 +385,7 @@ export default async function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto shrink-0">
             <Link href="/owner/listings/new">
-              <Button size="lg" className="w-full sm:w-auto font-bold bg-amber-500 hover:bg-amber-400 text-neutral-950 shadow-lg shadow-amber-500/20">
+              <Button size="lg" className="w-full sm:w-auto font-bold bg-green-500 hover:bg-green-400 text-white shadow-lg shadow-green-500/20">
                 List Your Home Now
               </Button>
             </Link>

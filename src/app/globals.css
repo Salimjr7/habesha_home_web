@@ -34,67 +34,67 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 220 20% 10%;
+    --background: 0 0% 100%;
+    --foreground: 150 25% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 150 25% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 150 25% 10%;
 
-    /* Habesha Gold / Warm Amber */
-    --primary: 38 92% 50%;
+    /* EthioHome Fresh Green Primary */
+    --primary: 96 68% 42%;
     --primary-foreground: 0 0% 100%;
 
-    /* Warm Sand / Neutral Secondary */
-    --secondary: 40 25% 94%;
-    --secondary-foreground: 30 20% 20%;
+    /* Clean Neutral Secondary */
+    --secondary: 140 15% 96%;
+    --secondary-foreground: 150 25% 15%;
 
-    --muted: 40 15% 92%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 140 12% 94%;
+    --muted-foreground: 150 10% 45%;
 
-    /* Emerald / Ethiopian Green Accent */
-    --accent: 155 70% 40%;
+    /* Fresh Green Accent */
+    --accent: 142 70% 40%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 88%;
-    --input: 40 15% 88%;
-    --ring: 38 92% 50%;
+    --border: 140 12% 90%;
+    --input: 140 12% 90%;
+    --ring: 96 68% 42%;
     --radius: 0.85rem;
   }
 
   .dark {
-    --background: 224 25% 7%;
-    --foreground: 40 20% 96%;
+    --background: 140 20% 4%;
+    --foreground: 140 15% 96%;
 
-    --card: 224 22% 11%;
-    --card-foreground: 40 20% 96%;
+    --card: 140 16% 7%;
+    --card-foreground: 140 15% 96%;
 
-    --popover: 224 22% 11%;
-    --popover-foreground: 40 20% 96%;
+    --popover: 140 16% 7%;
+    --popover-foreground: 140 15% 96%;
 
-    --primary: 38 92% 52%;
-    --primary-foreground: 224 25% 7%;
+    --primary: 96 70% 48%;
+    --primary-foreground: 140 20% 4%;
 
-    --secondary: 224 20% 16%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 140 14% 12%;
+    --secondary-foreground: 140 15% 92%;
 
-    --muted: 224 18% 18%;
-    --muted-foreground: 220 10% 65%;
+    --muted: 140 12% 14%;
+    --muted-foreground: 140 10% 65%;
 
-    --accent: 155 65% 45%;
+    --accent: 142 68% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 224 18% 18%;
-    --input: 224 18% 18%;
-    --ring: 38 92% 52%;
+    --border: 140 14% 14%;
+    --input: 140 14% 14%;
+    --ring: 96 70% 48%;
   }
 }
 
@@ -120,8 +120,8 @@ select optgroup {
 
 .dark select option,
 .dark select optgroup {
-  background-color: #181d28;
-  color: #f5f3ef;
+  background-color: #0d1712;
+  color: #f0f5f3;
 }
 
 /* Custom Scrollbar */
@@ -156,8 +156,8 @@ select optgroup {
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* Subtle Ethiopian subtle pattern accent */
-.habesha-pattern {
-  background-image: radial-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px);
+/* Subtle Ethiopian geometric pattern accent */
+.ethio-pattern {
+  background-image: radial-gradient(hsl(var(--primary) / 0.12) 1px, transparent 1px);
   background-size: 24px 24px;
 }

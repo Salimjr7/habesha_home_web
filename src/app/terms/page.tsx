@@ -2,7 +2,7 @@ export default function TermsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8">
       <div className="space-y-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+        <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
           Legal
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
@@ -15,7 +15,7 @@ export default function TermsPage() {
         <section className="space-y-2">
           <h2 className="text-base font-bold text-foreground">1. Introduction</h2>
           <p>
-            Welcome to Habesha Home. By accessing our platform, booking accommodations, or listing properties in Ethiopia, you agree to comply with and be bound by these Terms of Service.
+            Welcome to EthioHome. By accessing our platform, booking accommodations, or listing properties in Ethiopia, you agree to comply with and be bound by these Terms of Service.
           </p>
         </section>
 

@@ -56,7 +56,7 @@ export class PaymentService {
       phone: booking.renter.phone || undefined,
       callbackUrl: `${appUrl}/api/payments/webhook`,
       returnUrl: returnUrl || `${appUrl}/payment/success?tx_ref=${txRef}&bookingId=${booking.id}`,
-      title: `Habesha Home: ${booking.property.title}`,
+      title: `EthioHome: ${booking.property.title}`,
       description: `Reservation for ${booking.guests} guest(s)`,
       metadata: {
         bookingId: booking.id,

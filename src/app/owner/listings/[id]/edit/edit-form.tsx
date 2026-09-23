@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPropertyAction } from "@/server/actions/property.actions";
+import { updatePropertyAction } from "@/server/actions/property.actions";
 import { Button } from "@/components/ui/button";
 import {
   Building,
   Home,
   Sparkles,
   MapPin,
-  CheckCircle2,
   ArrowRight,
   ArrowLeft,
   Zap,
@@ -17,34 +16,60 @@ import {
   Wifi,
   ShieldCheck,
   Coffee,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PropertyPhotoUpload, PropertyImageItem } from "@/components/property/property-photo-upload";
 
-export default function NewListingPage() {
+interface EditListingFormProps {
+  property: {
+    id: string;
+    title: string;
+    description: string;
+    propertyType: "APARTMENT" | "HOUSE" | "VILLA" | "CONDO" | "STUDIO" | "PENTHOUSE" | "TOWNHOUSE" | "COTTAGE";
+    listingType: "SHORT_TERM" | "LONG_TERM" | "BOTH";
+    cityId: string;
+    address: string;
+    bedrooms: number;
+    bathrooms: number;
+    beds: number;
+    maxGuests: number;
+    pricePerNight: number;
+    pricePerMonth: number;
+    cleaningFee: number;
+    weeklyDiscount: number;
+    monthlyDiscount: number;
+    amenityIds: string[];
+    images?: PropertyImageItem[];
+  };
+}
+
+export default function EditListingForm({ property }: EditListingFormProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [images, setImages] = useState<PropertyImageItem[]>([]);
+  const [images, setImages] = useState<PropertyImageItem[]>(property.images || []);
 
-  // Form State
+  // Form State pre-populated with property details
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    propertyType: "APARTMENT" as const,
-    listingType: "SHORT_TERM" as const,
-    cityId: "addis-ababa",
-    address: "",
-    bedrooms: 2,
-    bathrooms: 2,
-    beds: 2,
-    maxGuests: 4,
-    pricePerNight: 5500, // In ETB
-    pricePerMonth: 85000,
-    cleaningFee: 500,
-    weeklyDiscount: 10,
-    monthlyDiscount: 25,
-    amenityIds: ["backup-generator", "water-tank", "wifi", "security", "coffee-ceremony"],
+    title: property.title || "",
+    description: property.description || "",
+    propertyType: property.propertyType || "APARTMENT",
+    listingType: property.listingType || "SHORT_TERM",
+    cityId: property.cityId || "addis-ababa",
+    address: property.address || "",
+    bedrooms: property.bedrooms ?? 2,
+    bathrooms: property.bathrooms ?? 1,
+    beds: property.beds ?? 2,
+    maxGuests: property.maxGuests ?? 4,
+    pricePerNight: property.pricePerNight || 5000,
+    pricePerMonth: property.pricePerMonth || 75000,
+    cleaningFee: property.cleaningFee ?? 500,
+    weeklyDiscount: property.weeklyDiscount ?? 10,
+    monthlyDiscount: property.monthlyDiscount ?? 20,
+    amenityIds: property.amenityIds?.length
+      ? property.amenityIds
+      : ["backup-generator", "water-tank", "wifi", "security"],
   });
 
   const propertyTypes = [
@@ -90,11 +115,11 @@ export default function NewListingPage() {
         formData.description.trim() ||
         `Authentic and fully equipped Ethiopian living space. Includes reliable continuous water reserve, standby generator backup, fiber Wi-Fi, and convenient access to local dining and transport.`;
 
-      const res = await createPropertyAction({
+      const res = await updatePropertyAction(property.id, {
         title: finalTitle,
         description: finalDescription,
-        propertyType: formData.propertyType,
-        listingType: formData.listingType,
+        propertyType: formData.propertyType as any,
+        listingType: formData.listingType as any,
         cityId: formData.cityId,
         address: finalAddress,
         bedrooms: Number(formData.bedrooms),
@@ -115,14 +140,15 @@ export default function NewListingPage() {
       });
 
       if (!res.success) {
-        toast.error(res.error.message || "Failed to publish listing.");
+        toast.error(res.error.message || "Failed to update listing.");
         return;
       }
 
-      toast.success("Listing published successfully!");
+      toast.success("Listing updated successfully!");
       router.push("/owner/listings");
+      router.refresh();
     } catch {
-      toast.error("An error occurred while publishing.");
+      toast.error("An error occurred while updating the listing.");
     } finally {
       setIsSubmitting(false);
     }
@@ -139,7 +165,7 @@ export default function NewListingPage() {
             {currentStep === 2 && "Rooms & Capacity"}
             {currentStep === 3 && "Ethiopian Amenities"}
             {currentStep === 4 && "Property Photos"}
-            {currentStep === 5 && "Pricing & Publish"}
+            {currentStep === 5 && "Pricing & Update"}
           </span>
         </div>
         <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
@@ -157,11 +183,14 @@ export default function NewListingPage() {
         {currentStep === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div>
-              <h2 className="text-2xl font-black text-foreground tracking-tight">
-                Tell us about your place
+              <span className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">
+                Edit Listing
+              </span>
+              <h2 className="text-2xl font-black text-foreground tracking-tight mt-1">
+                Property Details
               </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Start with the property title, Ethiopian city location, and property type.
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Update the title, Ethiopian city location, and property type.
               </p>
             </div>
 
@@ -263,60 +292,104 @@ export default function NewListingPage() {
           <div className="space-y-6 animate-in fade-in duration-200">
             <div>
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                Guest Capacity &amp; Rooms
+                Rooms &amp; Sleeping Arrangements
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                Specify how many guests and rooms your space accommodates.
+                Help travelers know how many guests can stay comfortably.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl border border-border/80 space-y-2">
-                <span className="text-xs font-bold uppercase text-muted-foreground">Max Guests</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={30}
-                  value={formData.maxGuests}
-                  onChange={(e) => setFormData({ ...formData, maxGuests: parseInt(e.target.value, 10) || 1 })}
-                  className="w-full h-10 px-3 rounded-lg border border-input text-base font-bold"
-                />
+              <div className="p-4 rounded-2xl border border-border/80 bg-background/50 space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Bedrooms
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, bedrooms: Math.max(0, formData.bedrooms - 1) })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    -
+                  </button>
+                  <span className="text-base font-bold w-6 text-center">{formData.bedrooms}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, bedrooms: formData.bedrooms + 1 })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl border border-border/80 space-y-2">
-                <span className="text-xs font-bold uppercase text-muted-foreground">Bedrooms</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={formData.bedrooms}
-                  onChange={(e) => setFormData({ ...formData, bedrooms: parseInt(e.target.value, 10) || 1 })}
-                  className="w-full h-10 px-3 rounded-lg border border-input text-base font-bold"
-                />
+              <div className="p-4 rounded-2xl border border-border/80 bg-background/50 space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Bathrooms
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, bathrooms: Math.max(1, formData.bathrooms - 1) })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    -
+                  </button>
+                  <span className="text-base font-bold w-6 text-center">{formData.bathrooms}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, bathrooms: formData.bathrooms + 1 })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl border border-border/80 space-y-2">
-                <span className="text-xs font-bold uppercase text-muted-foreground">Beds</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={30}
-                  value={formData.beds}
-                  onChange={(e) => setFormData({ ...formData, beds: parseInt(e.target.value, 10) || 1 })}
-                  className="w-full h-10 px-3 rounded-lg border border-input text-base font-bold"
-                />
+              <div className="p-4 rounded-2xl border border-border/80 bg-background/50 space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Beds
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, beds: Math.max(1, formData.beds - 1) })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    -
+                  </button>
+                  <span className="text-base font-bold w-6 text-center">{formData.beds}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, beds: formData.beds + 1 })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl border border-border/80 space-y-2">
-                <span className="text-xs font-bold uppercase text-muted-foreground">Bathrooms</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={formData.bathrooms}
-                  onChange={(e) => setFormData({ ...formData, bathrooms: parseInt(e.target.value, 10) || 1 })}
-                  className="w-full h-10 px-3 rounded-lg border border-input text-base font-bold"
-                />
+              <div className="p-4 rounded-2xl border border-border/80 bg-background/50 space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Max Guests
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, maxGuests: Math.max(1, formData.maxGuests - 1) })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    -
+                  </button>
+                  <span className="text-base font-bold w-6 text-center">{formData.maxGuests}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, maxGuests: formData.maxGuests + 1 })}
+                    className="w-8 h-8 rounded-lg bg-secondary text-foreground font-bold flex items-center justify-center hover:bg-secondary/80"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -329,34 +402,38 @@ export default function NewListingPage() {
           <div className="space-y-6 animate-in fade-in duration-200">
             <div>
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                Ethiopian Living Checklist
+                Ethiopian Home Amenities
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                Select amenities provided. Standby generator and water reserve are highlighted to guests.
+                Highlighting backup generator and continuous water reserve makes listings 3x more popular.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {amenitiesList.map((item) => {
-                const Icon = item.icon;
-                const isSelected = formData.amenityIds.includes(item.id);
+              {amenitiesList.map((amenity) => {
+                const Icon = amenity.icon;
+                const isSelected = formData.amenityIds.includes(amenity.id);
                 return (
                   <div
-                    key={item.id}
-                    onClick={() => toggleAmenity(item.id)}
-                    className={`p-4 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${
+                    key={amenity.id}
+                    onClick={() => toggleAmenity(amenity.id)}
+                    className={`p-4 rounded-2xl border-2 cursor-pointer flex items-center gap-3.5 transition-all ${
                       isSelected
-                        ? "border-primary bg-primary/5 text-foreground shadow-xs"
-                        : "border-border/80 hover:border-border text-muted-foreground"
+                        ? "border-green-500 bg-green-500/5 text-foreground shadow-xs"
+                        : "border-border/70 hover:border-border text-muted-foreground"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center text-primary">
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <span className="text-xs font-bold">{item.name}</span>
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                        isSelected
+                          ? "bg-green-500 text-white"
+                          : "bg-secondary text-muted-foreground"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-primary" />}
+                    <span className="text-xs font-bold flex-1">{amenity.name}</span>
+                    {isSelected && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
                   </div>
                 );
               })}
@@ -371,10 +448,10 @@ export default function NewListingPage() {
           <div className="space-y-6 animate-in fade-in duration-200">
             <div>
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                Add photos of your place
+                Update Property Photos
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                Upload real photos of your property. Guests love seeing the living room, bedrooms, bathrooms, and exterior views.
+                Upload new photos or manage existing photos. The first photo will be used as the cover.
               </p>
             </div>
 
@@ -389,46 +466,48 @@ export default function NewListingPage() {
           <div className="space-y-6 animate-in fade-in duration-200">
             <div>
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                Set Your Pricing (ETB)
+                Adjust Your Pricing (ETB)
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
                 Set your nightly rate in Ethiopian Birr. You receive net payout directly to your bank or telebirr.
               </p>
             </div>
 
-            <div className="space-y-4">
-              <div className="p-6 rounded-2xl border border-primary/40 bg-primary/5 space-y-2">
+            <div className="p-6 rounded-2xl border border-green-500/30 bg-green-500/5 space-y-4">
+              <div className="space-y-1">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Price Per Night (ETB)
                 </label>
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl font-extrabold text-foreground">ETB</span>
+                <div className="relative flex items-center">
+                  <span className="absolute left-4 font-black text-base text-foreground">ETB</span>
                   <input
                     type="number"
                     min={100}
                     step={100}
                     value={formData.pricePerNight}
                     onChange={(e) => setFormData({ ...formData, pricePerNight: parseInt(e.target.value, 10) || 0 })}
-                    className="w-full h-12 px-4 rounded-xl border border-input text-xl font-black text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full h-14 pl-16 pr-4 rounded-xl border border-input bg-card text-2xl font-black focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Cleaning Fee (ETB)
                   </label>
                   <input
                     type="number"
+                    min={0}
+                    step={50}
                     value={formData.cleaningFee}
                     onChange={(e) => setFormData({ ...formData, cleaningFee: parseInt(e.target.value, 10) || 0 })}
                     className="w-full h-10 px-3 rounded-xl border border-input text-sm font-semibold"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Weekly Stay Discount (%)
                   </label>
                   <input
@@ -463,13 +542,7 @@ export default function NewListingPage() {
           {currentStep < 5 ? (
             <Button
               type="button"
-              onClick={() => {
-                if (currentStep === 1 && !formData.title.trim()) {
-                  toast.error("Please enter a title for your property.");
-                  return;
-                }
-                setCurrentStep(currentStep + 1);
-              }}
+              onClick={() => setCurrentStep(currentStep + 1)}
               className="font-bold bg-primary text-primary-foreground rounded-xl"
             >
               Next Step <ArrowRight className="w-4 h-4 ml-2" />
@@ -481,7 +554,7 @@ export default function NewListingPage() {
               disabled={isSubmitting}
               className="font-bold bg-gradient-to-r from-green-600 to-emerald-500 text-white rounded-xl shadow-lg shadow-green-500/25"
             >
-              {isSubmitting ? "Publishing Home..." : "Publish Ethiopian Home"}
+              {isSubmitting ? "Saving Changes..." : "Save & Update Listing"}
             </Button>
           )}
         </div>

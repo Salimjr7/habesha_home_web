@@ -1,5 +1,5 @@
 // ============================================================================
-// Habesha Home — CASL Authorization System
+// EthioHome — CASL Authorization System
 // ============================================================================
 
 import {
@@ -63,6 +63,9 @@ export function defineAbilitiesFor(user?: UserContext | null): AppAbility {
 
   switch (user.role) {
     case "RENTER":
+      // Properties (onboarding as host)
+      can("create", "Property");
+
       // Bookings
       can("create", "Booking");
       can("read", "Booking", { renterId: user.id } as any);

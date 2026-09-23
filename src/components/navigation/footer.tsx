@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Home, Shield, Sparkles, Heart } from "lucide-react";
+import Image from "next/image";
+import { Shield, Sparkles, Heart } from "lucide-react";
 
 export function Footer() {
   return (
@@ -9,22 +10,34 @@ export function Footer() {
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
-                <Home className="w-5 h-5" />
+              {/* Light Mode Logo */}
+              <Image
+                src="/ethiohome-logo.png"
+                alt="EthioHome Logo"
+                width={150}
+                height={38}
+                className="h-8 w-auto object-contain dark:hidden"
+              />
+              {/* Dark Mode Logo */}
+              <div className="hidden dark:flex items-center bg-white/95 px-2.5 py-1 rounded-xl shadow-xs">
+                <Image
+                  src="/ethiohome-logo.png"
+                  alt="EthioHome Logo"
+                  width={140}
+                  height={35}
+                  className="h-6 w-auto object-contain"
+                />
               </div>
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-400 dark:to-yellow-300 bg-clip-text text-transparent">
-                Habesha Home
-              </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
               The premier Ethiopian home rental marketplace. Discover hand-picked luxury apartments, crater lake villas, and authentic guest homes across Addis Ababa, Bishoftu, Hawassa, and Bahir Dar.
             </p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2">
-              <span className="flex items-center gap-1.5 font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="flex items-center gap-1.5 font-medium text-green-600 dark:text-green-400">
                 <Shield className="w-4 h-4" /> 100% Verified Properties
               </span>
               <span>•</span>
-              <span className="flex items-center gap-1.5 font-medium text-amber-600 dark:text-amber-400">
+              <span className="flex items-center gap-1.5 font-medium text-green-600 dark:text-green-400">
                 <Sparkles className="w-4 h-4" /> Chapa & Telebirr Secured
               </span>
             </div>
@@ -101,7 +114,7 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li>
                 <Link href="/about" className="hover:text-primary transition-colors">
-                  About Habesha Home
+                  About EthioHome
                 </Link>
               </li>
               <li>
@@ -124,7 +137,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} Habesha Home Inc. Built for Ethiopia with ❤️.</p>
+          <p>© {new Date().getFullYear()} EthioHome Inc. Built for Ethiopia with ❤️.</p>
           <div className="flex items-center gap-6">
             <span>ETB (Ethiopian Birr)</span>
             <span>English / አማርኛ</span>

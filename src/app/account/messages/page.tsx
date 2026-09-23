@@ -15,7 +15,7 @@ export default function MessagesPage() {
       id: "m-1",
       sender: "host",
       name: "Dawit Haile",
-      content: "Selam Abebe! Welcome to Habesha Home. Let me know what time your flight lands at Bole International Airport so we can coordinate your check-in.",
+      content: "Selam Abebe! Welcome to EthioHome. Let me know what time your flight lands at Bole International Airport so we can coordinate your check-in.",
       time: "10:30 AM",
     },
     {

@@ -122,7 +122,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 Filters
               </span>
               {(location || propertyType || minPrice || maxPrice || bedrooms) && (
-                <Link href="/search" className="text-xs text-amber-600 dark:text-amber-400 hover:underline">
+                <Link href="/search" className="text-xs text-green-600 dark:text-green-400 hover:underline">
                   Reset all
                 </Link>
               )}
@@ -247,7 +247,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </>
           ) : (
             <div className="p-12 text-center rounded-3xl border border-border/80 bg-card space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center mx-auto">
                 <Search className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold">No properties match your search</h3>

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
-import { Home, Lock, Mail, User, Phone, Sparkles, Building } from "lucide-react";
+import Image from "next/image";
+import { Lock, Mail, User, Phone, Sparkles, Building } from "lucide-react";
 import { toast } from "sonner";
 
 export default function RegisterPage() {
@@ -34,16 +35,18 @@ export default function RegisterPage() {
 
     setIsLoading(true);
     try {
-      const res = await signUp.email({
+      const res = await (signUp.email as any)({
         name,
         email,
         password,
+        role,
+        phone: phone || undefined,
       });
 
       if (res.error) {
         toast.error(res.error.message || "Registration failed.");
       } else {
-        toast.success("Account created successfully! Welcome to Habesha Home.");
+        toast.success("Account created successfully! Welcome to EthioHome.");
         router.push(role === "OWNER" ? "/owner" : "/account");
         router.refresh();
       }
@@ -59,13 +62,27 @@ export default function RegisterPage() {
       <div className="w-full max-w-md rounded-3xl border border-border/80 bg-card p-8 sm:p-10 shadow-2xl space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
-              <Home className="w-5 h-5" />
+          <Link href="/" className="inline-flex items-center justify-center gap-2 mb-3">
+            {/* Light Mode Logo */}
+            <Image
+              src="/ethiohome-logo.png"
+              alt="EthioHome Logo"
+              width={160}
+              height={40}
+              className="h-9 w-auto object-contain dark:hidden"
+              priority
+            />
+            {/* Dark Mode Logo */}
+            <div className="hidden dark:flex items-center bg-white/95 px-3 py-1.5 rounded-xl shadow-xs">
+              <Image
+                src="/ethiohome-logo.png"
+                alt="EthioHome Logo"
+                width={150}
+                height={38}
+                className="h-7 w-auto object-contain"
+                priority
+              />
             </div>
-            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-amber-600 to-amber-700 dark:from-amber-400 dark:to-yellow-300 bg-clip-text text-transparent">
-              Habesha Home
-            </span>
           </Link>
           <h1 className="text-2xl font-black text-foreground">Create Your Account</h1>
           <p className="text-xs text-muted-foreground">
@@ -96,7 +113,7 @@ export default function RegisterPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Building className="w-3.5 h-3.5 text-amber-500" /> Property Host
+            <Building className="w-3.5 h-3.5 text-green-500" /> Property Host
           </button>
         </div>
 
